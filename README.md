@@ -1,5 +1,5 @@
 # gulp-project-automation
-
+<3
 This Gulp file prepares an AngularJs app that is mixed with Typescript to be ready for publishing. 
 
 The app first passes through a phase which is the development phase, and then it's piped to the building phase.
