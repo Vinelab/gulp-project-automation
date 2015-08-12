@@ -12,7 +12,6 @@ var lazy = require("gulp-load-plugins")({lazy: true});
 var runSequence = require("run-sequence");
 var wiredep = require("wiredep");
 
-
 /*
 * * * Compile Typescript  files
 */
@@ -184,9 +183,7 @@ gulp.task("new-less-watcher", function () {
 */
 gulp.task('ts-watcher', function() {
     gulp.watch(config.allts, function () {
-        runSequence("ts-compiler", function () {
-          useRefDev();
-        });
+        runSequence("ts-compiler");
     });
 });
 
@@ -197,9 +194,7 @@ gulp.task('ts-watcher', function() {
 */
 gulp.task('less-watcher', function() {
     gulp.watch(config.allless, function () {
-        runSequence("less-css", function () {
-          useRefDev();
-        });
+        runSequence("less-css");
     });
 });
 
@@ -248,14 +243,14 @@ function startBrowserSync() {
 /*
 * * * It goes into the index.html. It merges all .js files into build.js and all .css files into main.css. 
 */
-function useRefDev () {
+/*function useRefDev () {
   var assets = lazy.useref.assets();
   gulp.src(config.index)
       .pipe(assets)
       .pipe(assets.restore())
       .pipe(lazy.useref())
       .pipe(gulp.dest(config.dev));
-}
+}*/
 
 
 /*
@@ -380,7 +375,7 @@ gulp.task("env-development", function () {
                 "less-watcher",
                 "new-ts-watcher",
                 "new-less-watcher",
-                "browser-sync", useRefDev);
+                "browser-sync");
 });
 
 
