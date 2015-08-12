@@ -5,7 +5,7 @@
     "author": "Mohammad K. Sidani <moe.sidani@vinelab.com>",
     "description": "Automate project tasks using Gulp",
     "license": "BSD",
-    "main": "gulpFile.js",
+    "main": "./src/gulpFile.js",
     "repository": {
         "type": "git",
         "url": "git@github.com:Vinelab/gulp-project-automation.git"
