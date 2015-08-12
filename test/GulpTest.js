@@ -80,9 +80,6 @@ namespace.module('TestingModule', function (exports, require) {
   		});
 	});
 
-
-
-
 	describe('gulp output stream', function() {
   		describe('dest()', function() {
     		it('should return a stream', function() {
@@ -161,13 +158,3 @@ namespace.module('TestingModule', function (exports, require) {
   		});
 	});
 });
-
-
-
-
-
-
-
-
-
-
