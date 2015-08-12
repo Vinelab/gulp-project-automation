@@ -1,57 +1,57 @@
 module.exports = function () {
 	var config = {
 
-		allcss: "development/app/_public/styles/css/*.css",
+		allcss: "./development/app/_public/styles/css/*.css",
 
-		allfonts: "app/_public/styles/fonts/*.*",
+		allfonts: "./app/_public/styles/fonts/*.*",
 
-		allhtml: "app/**/*.html",
+		allhtml: "./app/**/*.html",
 
-		allimg: "app/_public/img/*.*",
+		allimg: "./app/_public/img/*.*",
 
-		alljs: ["development/app/app.module.js", "development/app/app.*.js", "development/app/**/*.js"],
+		alljs: ["./development/app/app.module.js", "./development/app/app.*.js", "./development/app/**/*.js"],
 
-		allless: "app/_public/styles/less/*.less",
+		allless: "./app/_public/styles/less/*.less",
 
-		allts: ["app/app.*.ts", "app/**/*.ts"],
+		allts: ["./app/app.*.ts", "./app/**/*.ts"],
 
-		browserSync: ["!app/_public/styles/less/*.less", "app/**/*.*"],
+		browserSync: ["!./app/_public/styles/less/*.less", "./app/**/*.*"],
 
-		build: "build/",
+		build: "./build/",
 
-		buildCss: "build/app/main.css",
+		buildCss: "./build/app/main.css",
 
-		buildDest: "build/app",
+		buildDest: "./build/app",
 
-		buildJs: "build/app/build.js",
+		buildJs: "./build/app/build.js",
 
 		buildMinJs: "./build/app/build.optimized.min.js",
 
 		buildMinCss: "./build/app/main.optimized.min.css",
 
-		buildTmpl: "build/app/templates.js",
+		buildTmpl: "./build/app/templates.js",
 
-		client: "/app",
+		client: "./app",
 
-		dev: "development/",
+		dev: "./development/",
 
-		devDest: "development/app",
+		devDest: "./development/app",
 
-		devDestCss: "development/app/_public/styles/css",
+		devDestCss: "./development/app/_public/styles/css",
 
-		devMainCss: "development/app/main.css",
+		devMainCss: "./development/app/main.css",
 
-		fontDest: "build/app/_public/styles/fonts",
+		fontDest: "./build/app/_public/styles/fonts",
 
-		imgDest: "build/app/_public/img",
+		imgDest: "./build/app/_public/img",
 
-		index: "index.html",
+		index: "./index.html",
 
-		templates: "build/app/templates.js",
+		templates: "./build/app/templates.js",
 
-		watchTS: ["app/**/*", "development/app/**/*"],
+		watchTS: ["./app/**/*", "./development/app/**/*"],
 
-		watchLess: ["app/**/**/**", "development/app/**/**/**"]
+		watchLess: ["./app/**/", "./development/app/**/"]
 	};
 	return config;
 };
