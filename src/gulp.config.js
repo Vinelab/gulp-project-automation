@@ -49,9 +49,9 @@ module.exports = function () {
 
 		templates: "./build/app/templates.js",
 
-		watchTS: ["./app/**/*", "./development/app/**/*"],
+		watchTS: "./app/**/",
 
-		watchLess: ["./app/**/", "./development/app/**/"]
+		watchLess: "./app/**/"
 	};
 	return config;
 };
