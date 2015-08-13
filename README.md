@@ -16,13 +16,13 @@
     and all JS/CSS scripts are also added to the index.html. 
 
     Two watchers are also implemented to watch for all Typescript and Less changes in files. 
-    Any new TS file will be compiled and added automatically to the index.html through a specific additional 
-    watcher. Once a TS file is deleted, it will be automatically removed from the index.html. BrowserSync module 
-    is also implemented that reloads the browser on any file change.
+    Any new TS file will be compiled and added automatically to the index.html through a specific 
+    additional watcher. Once a TS file is deleted, it will be automatically removed from the index.html. 
+    BrowserSync module is also implemented that reloads the browser on any file change.
     
-    In the building phase images are compressed, HTML/CSS/JS files are minifed, fonts are copied to the build 
-    destination, angular dependencies get fixed, and html files are added to the angular template cache to minimize 
-    Ajax calls.
+    In the building phase images are compressed, HTML/CSS/JS files are minifed, fonts are copied to the 
+    build destination, angular dependencies get fixed, and html files are added to the angular template 
+    cache to minimize Ajax calls.
 
 
 # Installation
