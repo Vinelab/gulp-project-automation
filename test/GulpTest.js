@@ -184,55 +184,6 @@ namespace.module('TestingModule', function (exports, require) {
               gulp.reset();
             };        
         });
-        it('should run all tasks when call run() multiple times', function() {
-            var a = 0;
-            var fn = function() {
-              this.should.equal(gulp);
-              ++a;
-            };
-            var fn2 = function() {
-              this.should.equal(gulp);
-              ++a;
-            };
-            fn2.onload = function () {
-              gulp.task('test', fn);
-              gulp.task('test2', fn2);
-              gulp.run('test');
-              gulp.run('test2');
-              a.should.equal(2);
-              gulp.reset();
-            };
-        });
-        it('should run all async promise tasks', function() {
-            var a = 0; 
-            var fn = function() {
-              var deferred = Q.defer();
-              setTimeout(function() {
-                  ++a;
-                  deferred.resolve();
-              }, 1);
-              return deferred.promise;
-            };
-            var fn2 = function() {
-              var deferred = Q.defer();
-              setTimeout(function() {
-                  ++a;
-                  deferred.resolve();
-              }, 1);
-              return deferred.promise;
-            };
-            fn2.onload = function () {
-              gulp.task('test', fn);
-              gulp.task('test2', fn2);
-              gulp.run('test');
-              gulp.run('test2', function() {
-                gulp.isRunning.should.equal(false);
-                a.should.equal(2);
-                gulp.reset();
-              });
-              gulp.isRunning.should.equal(true);
-            };
-        });
         it('should run all async callback tasks', function() {
             var a = 0; 
             var fn = function(cb) {
