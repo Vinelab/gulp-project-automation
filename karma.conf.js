@@ -19,13 +19,13 @@ module.exports = function(config){
 
     plugins : [
             'karma-chrome-launcher',
-            'karma-jasmine'
+            'karma-jasmine',
+            "karma-spec-reporter"
     ],
 
-    junitReporter : {
-     	outputFile: './Test/test_out.xml',
-      	suite: 'unit'
-    }
+    reporters: ["spec"],
 
+    specReporter: {maxLogLines: 5}
+    
   });
 };
