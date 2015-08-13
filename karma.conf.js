@@ -1,8 +1,7 @@
 module.exports = function(config){
   config.set({
-
     basePath : '',
-
+    
     files : [
       './Test/GulpTest.js'
     ],
@@ -26,6 +25,5 @@ module.exports = function(config){
     reporters: ["spec"],
 
     specReporter: {maxLogLines: 5}
-    
   });
 };
