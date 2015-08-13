@@ -28,6 +28,9 @@ namespace.module('TestingModule', function (exports, require) {
             var stream = function () {
               return gulp.src("lib/test.txt");
             };
+            stream.onerror = function (err) {
+              console.log(err);
+            };
             stream.onload = function () {
               should.exist(stream());
             };  
@@ -36,8 +39,8 @@ namespace.module('TestingModule', function (exports, require) {
             var stream = function () {
               return gulp.src("lib/test.txt");
             };
-            stream.onerror = function () {
-              console.log("error");
+            stream.onerror = function (err) {
+              console.log(err);
             };
             stream.onload =  function(file) {
               should.exist(file);
@@ -52,8 +55,8 @@ namespace.module('TestingModule', function (exports, require) {
           var stream = function () {
             return gulp.src(["lib/test.txt", "lib/test1.txt"]);
           };
-            stream.onerror = function () {
-              console.log("error");
+            stream.onerror = function (err) {
+              console.log(err);
             };
             stream.onload =  function (file) {
               should.exist(file);
@@ -69,8 +72,8 @@ namespace.module('TestingModule', function (exports, require) {
             var stream = function () {
               return gulp.src(join(__dirname, "lib/*1.txt"));
             };
-            stream.onerror = function () {
-              console.log("error");
+            stream.onerror = function (err) {
+              console.log(err);
             };
             stream.onload = function (file) {
               should.exist(file);
@@ -97,6 +100,9 @@ namespace.module('TestingModule', function (exports, require) {
             var stream = function () {
               return gulp.dest("lib/");
             };
+            stream.onerror = function (err) {
+              console.log(err);
+            };
             stream.onload = function () {
               should.exist(stream);
             };   
@@ -108,12 +114,11 @@ namespace.module('TestingModule', function (exports, require) {
             var outstream = function () {
               return gulp.dest("lib/");
             };
-            outstream.onerror = function () {
-              console.log("error");
+            outstream.onerror = function (err) {
+              console.log(err);
             }
             outstream.onload = function(file) {
               instream.pipe(outstream);
-
               should.exist(file);
               should.exist(file.path);
               should.exist(file.contents);
@@ -137,9 +142,8 @@ namespace.module('TestingModule', function (exports, require) {
             var outstream = function () {
               return instream.pipe(gulp.dest("lib/new/"));
             };
-
-            outstream.onerror = function () {
-              console.log("error");
+            outstream.onerror = function (err) {
+              console.log(err);
             };
             outstream.onload = function(file) {
               should.exist(file);
