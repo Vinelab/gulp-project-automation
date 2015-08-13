@@ -29,28 +29,51 @@ Ajax calls.
 # App Structure
 
  App
+ 
   _public
+  
     Img
+    
     Styles
+    
       Less
+      
       Fonts
+      
   Component
+  
     Component.ts
+    
     Component.html
+    
   Layout
+  
     directive.ts
+    
   Services
+  
     service.ts
+    
   Filters
+  
     filter.ts
+    
   App.ts
+  
   App.config.ts
+  
   App.routes.ts
+  
   MainCtrl.ts
+  
   Index.html
+  
   gulpFile.js
+  
   gulp.config.js
+  
   package.json
+  
   bower.json
   
 Note: In the first phase the root folder is Development, and in the last phase the root folder is Build
