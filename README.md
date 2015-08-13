@@ -11,7 +11,8 @@
         
         Building/Production Phase
 
-    In the development phase all Typescript files are compiled, all Less files are converted to CSS, browser prefixes
+    In the development phase all Typescript files are compiled, all Less files are converted to CSS, 
+    browser prefixes
     are added to the main CSS file, all bower components are added to the index.html, and all JS/CSS scripts are also     
     added to the index.html. 
     In addition, two watchers are implemented to watch for all Typescript and Less changes in files. 
