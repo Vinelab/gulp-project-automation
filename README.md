@@ -14,8 +14,10 @@ In the building phase images are compressed, HTML/CSS/JS files are minifed, font
 Ajax calls.
 
 
-Installation:
+Installation
+
   Open up the terminal, and run these commands
+  
     bower install
     npm install
 
