@@ -20,7 +20,7 @@ namespace.module('TestingModule', function (exports, require) {
               should.exist(stream());
             };  
         });
-        it('should return a input stream from a flat path', function() {
+        it('should return a input stream from a direct path', function() {
             var stream = function () {
               return gulp.src("lib/test.txt");
             };
@@ -44,7 +44,7 @@ namespace.module('TestingModule', function (exports, require) {
             stream.onerror = function () {
               console.log("error");
             };
-            stream.onload =  function(file) {
+            stream.onload =  function (file) {
               should.exist(file);
               should.exist(file.path);
               files.push("lib/test.txt");
@@ -55,18 +55,19 @@ namespace.module('TestingModule', function (exports, require) {
               console.log("done");
             };
         });
-        it('should return a input stream from a deeper glob', function() {
+        it('should return a input stream from a deep glob', function() {
             var stream = function () {
-              return gulp.src('lib/*.txt');
+              return gulp.src(join(__dirname, "lib/*1.txt"));
             };
-            var a = 0;
-            //setTimeout(function () {
             stream.onerror = function () {
-              console.log("error");
+              console.log("done");
             };
-            stream.onload = function() {
-              ++a;
-              a.should.equal(2);
+            stream.onload = function (file) {
+              should.exist(file);
+              should.exist(file.path);
+              should.exist(file.contents);
+              join(file.path, '').should.equal(join(__dirname, 'lib/test1.txt'));
+              String(file.contents).should.equal('THIS IS A TEST');
               console.log("done");
             };
         });
@@ -103,7 +104,6 @@ namespace.module('TestingModule', function (exports, require) {
             outstream.onload = function(file) {
               instream.pipe(outstream);
 
-              // Data should be re-emitted right
               should.exist(file);
               should.exist(file.path);
               should.exist(file.contents);
@@ -117,7 +117,7 @@ namespace.module('TestingModule', function (exports, require) {
             };
         });
 
-      it('should return a output stream that writes streaming files into new directories (read: false, buffer: false)', function() {
+      it('should return an output stream that writes streaming files into new directories (read: false, buffer: false)', function() {
             testWriteDir({buffer: false, read: false});
         });
 
