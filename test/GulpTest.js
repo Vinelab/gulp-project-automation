@@ -12,6 +12,7 @@ namespace.module('TestingModule', function (exports, require) {
         var fs = require('graceful-fs');
         var should = require('should');
         var join = require('path').join;
+
         it('should return a stream', function() {
             var stream = function () {
               return gulp.src("lib/test.txt");
@@ -33,7 +34,6 @@ namespace.module('TestingModule', function (exports, require) {
               should.exist(file.contents);
               join(file.path, '').should.equal("lib/test.txt");
               String(file.contents).should.equal("THIS IS A TEST");
-              console.log("done");
             };
         });
         it('should return an input stream for multiple paths', function() {
@@ -52,7 +52,6 @@ namespace.module('TestingModule', function (exports, require) {
               should(files.length).equal(2);
               should(files[0].path).equal("lib/test.txt");
               should(files[1].path).equal("lib/test1.txt");
-              console.log("done");
             };
         });
         it('should return a input stream from a deep glob', function() {
@@ -60,7 +59,7 @@ namespace.module('TestingModule', function (exports, require) {
               return gulp.src(join(__dirname, "lib/*1.txt"));
             };
             stream.onerror = function () {
-              console.log("done");
+              console.log("error");
             };
             stream.onload = function (file) {
               should.exist(file);
@@ -68,7 +67,6 @@ namespace.module('TestingModule', function (exports, require) {
               should.exist(file.contents);
               join(file.path, '').should.equal(join(__dirname, 'lib/test1.txt'));
               String(file.contents).should.equal('THIS IS A TEST');
-              console.log("done");
             };
         });
       });
@@ -78,10 +76,11 @@ namespace.module('TestingModule', function (exports, require) {
   * * * Test for the output stream
   */
   describe('gulp output stream', function() {
-    var gulp = require("gulp");
+      var gulp = require("gulp");
       var fs = require('graceful-fs');
-    var should = require('should');
-    var join = require('path').join;
+      var should = require('should');
+      var join = require('path').join;
+
       describe('dest()', function() {
         it('should return a stream', function() {
             var stream = function () {
@@ -112,12 +111,11 @@ namespace.module('TestingModule', function (exports, require) {
                   should.not.exist(err);
                   should.exist(contents);
                   String(contents).should.equal('THIS IS A TEST');
-                  console.log("done");
               };
             };
         });
 
-      it('should return an output stream that writes streaming files into new directories (read: false, buffer: false)', function() {
+        it('should return an output stream that writes streaming files into new directories (read: false, buffer: false)', function() {
             testWriteDir({buffer: false, read: false});
         });
 
@@ -133,15 +131,10 @@ namespace.module('TestingModule', function (exports, require) {
               console.log("error");
             };
             outstream.onload = function(file) {
-              // data should be re-emitted right
               should.exist(file);
               should.exist(file.path);
               fs.exists("lib/new/", function(exists) {
-                  /* Stinks that ok is an expression instead of a function call */
-                  /* jshint expr: true */
                   should(exists).be.ok;
-                  /* jshint expr: false */
-                  console.log("done");
               });
             };
         }
@@ -152,10 +145,10 @@ namespace.module('TestingModule', function (exports, require) {
   * * * Test for the tasks
   */
   describe('gulp tasks', function() {
-    var gulp = require("gulp");
+      var gulp = require("gulp");
       var fs = require('graceful-fs');
-    var should = require('should');
-    var join = require('path').join;
+      var should = require('should');
+      var join = require('path').join;
 
       describe('task()', function() {
         it('should define a task', function() {
@@ -165,7 +158,6 @@ namespace.module('TestingModule', function (exports, require) {
               should.exist(gulp.tasks.test);
               gulp.tasks.test.fn.should.equal(fn);
               gulp.reset();
-              console.log("done");
             };
         });
       });
@@ -190,10 +182,8 @@ namespace.module('TestingModule', function (exports, require) {
               gulp.run(task.test, task2.test2); 
               a.should.equal(2);
               gulp.reset();
-              console.log("done");
             };        
         });
-
         it('should run all tasks when call run() multiple times', function() {
             var a = 0;
             var fn = function() {
@@ -211,10 +201,8 @@ namespace.module('TestingModule', function (exports, require) {
               gulp.run('test2');
               a.should.equal(2);
               gulp.reset();
-              console.log("done");
             };
         });
-
         it('should run all async promise tasks', function() {
             var a = 0; 
             var fn = function() {
@@ -241,12 +229,10 @@ namespace.module('TestingModule', function (exports, require) {
                 gulp.isRunning.should.equal(false);
                 a.should.equal(2);
                 gulp.reset();
-                console.log("done");
               });
               gulp.isRunning.should.equal(true);
             };
         });
-
         it('should run all async callback tasks', function() {
             var a = 0; 
             var fn = function(cb) {
@@ -269,12 +255,10 @@ namespace.module('TestingModule', function (exports, require) {
                 gulp.isRunning.should.equal(false);
                 a.should.equal(2);
                 gulp.reset();
-                console.log("done");
               });
               gulp.isRunning.should.equal(true);
             };
         });
-
         it('should run task scoped to gulp', function() {
             var a = 0;
             var fn = function() {
@@ -287,10 +271,8 @@ namespace.module('TestingModule', function (exports, require) {
               a.should.equal(1);
               gulp.isRunning.should.equal(false);
               gulp.reset();
-              console.log("done");
             };
         });
-
         it('should run a default task scoped to gulp', function() {
             var a = 0;
             var fn = function() {
@@ -303,7 +285,6 @@ namespace.module('TestingModule', function (exports, require) {
               a.should.equal(1);
               gulp.isRunning.should.equal(false);
               gulp.reset();
-              console.log("done");
             };
         });
       });
