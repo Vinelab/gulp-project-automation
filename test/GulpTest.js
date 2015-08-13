@@ -10,8 +10,8 @@ namespace.module('TestingModule', function (exports, require) {
       describe('src()', function() {
         var gulp = require("gulp");
         var fs = require('graceful-fs');
-      var should = require('should');
-      var join = require('path').join;
+        var should = require('should');
+        var join = require('path').join;
         it('should return a stream', function() {
             var stream = function () {
               return gulp.src("lib/test.txt");
