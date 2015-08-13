@@ -1,4 +1,4 @@
-                                                # gulp-project-automation
+# gulp-project-automation
 
 # Installation
 
