@@ -19,6 +19,7 @@ Installation
   Open up the terminal, and run these commands
   
     bower install
+    
     npm install
 
 
