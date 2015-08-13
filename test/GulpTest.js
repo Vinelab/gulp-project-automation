@@ -10,8 +10,8 @@ namespace.module('TestingModule', function (exports, require) {
       describe('src()', function() {
         var gulp = require("gulp");
         var fs = require('graceful-fs');
-        var should = require('should');
-        var join = require('path').join;
+      var should = require('should');
+      var join = require('path').join;
         it('should return a stream', function() {
             var stream = function () {
               return gulp.src("lib/test.txt");
@@ -117,7 +117,7 @@ namespace.module('TestingModule', function (exports, require) {
             };
         });
 
-        it('should return a output stream that writes streaming files into new directories (read: false, buffer: false)', function() {
+      it('should return a output stream that writes streaming files into new directories (read: false, buffer: false)', function() {
             testWriteDir({buffer: false, read: false});
         });
 
@@ -133,10 +133,14 @@ namespace.module('TestingModule', function (exports, require) {
               console.log("error");
             };
             outstream.onload = function(file) {
+              // data should be re-emitted right
               should.exist(file);
               should.exist(file.path);
               fs.exists("lib/new/", function(exists) {
+                  /* Stinks that ok is an expression instead of a function call */
+                  /* jshint expr: true */
                   should(exists).be.ok;
+                  /* jshint expr: false */
                   console.log("done");
               });
             };
@@ -148,10 +152,10 @@ namespace.module('TestingModule', function (exports, require) {
   * * * Test for the tasks
   */
   describe('gulp tasks', function() {
-      var gulp = require("gulp");
+    var gulp = require("gulp");
       var fs = require('graceful-fs');
-      var should = require('should');
-      var join = require('path').join;
+    var should = require('should');
+    var join = require('path').join;
 
       describe('task()', function() {
         it('should define a task', function() {
@@ -189,6 +193,7 @@ namespace.module('TestingModule', function (exports, require) {
               console.log("done");
             };        
         });
+
         it('should run all tasks when call run() multiple times', function() {
             var a = 0;
             var fn = function() {
@@ -209,6 +214,7 @@ namespace.module('TestingModule', function (exports, require) {
               console.log("done");
             };
         });
+
         it('should run all async promise tasks', function() {
             var a = 0; 
             var fn = function() {
@@ -240,6 +246,7 @@ namespace.module('TestingModule', function (exports, require) {
               gulp.isRunning.should.equal(true);
             };
         });
+
         it('should run all async callback tasks', function() {
             var a = 0; 
             var fn = function(cb) {
@@ -267,6 +274,7 @@ namespace.module('TestingModule', function (exports, require) {
               gulp.isRunning.should.equal(true);
             };
         });
+
         it('should run task scoped to gulp', function() {
             var a = 0;
             var fn = function() {
@@ -282,6 +290,7 @@ namespace.module('TestingModule', function (exports, require) {
               console.log("done");
             };
         });
+
         it('should run a default task scoped to gulp', function() {
             var a = 0;
             var fn = function() {
