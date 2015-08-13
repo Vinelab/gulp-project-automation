@@ -1,6 +1,14 @@
-# gulp-project-automation
+                                                # gulp-project-automation
 
+# Installation
 
+  Open up the terminal, and run these commands
+  
+    bower install
+    
+    npm install
+    
+    
 # About this Gulp
 
     This Gulp file prepares an AngularJs app that is mixed with Typescript to be ready for publishing. 
@@ -24,15 +32,6 @@
     build destination, angular dependencies get fixed, and html files are added to the angular template 
     cache to minimize Ajax calls.
 
-
-# Installation
-
-  Open up the terminal, and run these commands
-  
-    bower install
-    
-    npm install
-    
 
 # App Structure
 
