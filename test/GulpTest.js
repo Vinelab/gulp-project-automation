@@ -76,12 +76,12 @@ namespace.module('TestingModule', function (exports, require) {
   * * * Test for the output stream
   */
   describe('gulp output stream', function() {
-      var gulp = require("gulp");
-      var fs = require('graceful-fs');
-      var should = require('should');
-      var join = require('path').join;
-
       describe('dest()', function() {
+        var gulp = require("gulp");
+        var fs = require('graceful-fs');
+        var should = require('should');
+        var join = require('path').join;
+
         it('should return a stream', function() {
             var stream = function () {
               return gulp.dest("lib/");
