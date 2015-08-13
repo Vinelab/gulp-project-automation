@@ -1,5 +1,8 @@
 # gulp-project-automation
 
+
+# About this Gulp
+
 This Gulp file prepares an AngularJs app that is mixed with Typescript to be ready for publishing. 
 
 The app first passes through a phase which is the development phase, and then it's piped to the building phase.
@@ -14,63 +17,40 @@ In the building phase images are compressed, HTML/CSS/JS files are minifed, font
 Ajax calls.
 
 
-Installation
+# Installation
 
   Open up the terminal, and run these commands
   
     bower install
     
     npm install
+    
 
-
-This gulp file takes into consideration the following App structure:
-
-Note: In the first phase the root folder is Development, and in the last phase the root folder is Build
+# App Structure
 
  App
-
   _public
-  
     Img
-    
     Styles
-    
       Less
-      
       Fonts
-      
   Component
-  
     Component.ts
-    
     Component.html
-    
   Layout
-  
     directive.ts
-    
   Services
-  
     service.ts
-    
   Filters
-  
     filter.ts
-    
   App.ts
-  
   App.config.ts
-  
   App.routes.ts
-  
   MainCtrl.ts
+  Index.html
+  gulpFile.js
+  gulp.config.js
+  package.json
+  bower.json
   
- Index.html
-
- gulpFile.js
- 
- gulp.config.js
-
- package.json
-
- bower.json
+Note: In the first phase the root folder is Development, and in the last phase the root folder is Build
