@@ -1,8 +1,18 @@
 'use strict';
+
+/*
+* * * Import namespace.min.js from https://github.com/mckoss/namespace/blob/master/namespace.min.js
+* * * By importing this library, we'd be able to use Node's modules from the browser. 
+* * * When we run the command "karma start karma.conf.js" it will open the browser 
+* * * and will run the test file, but Node's modules will be unreachable and using require("..") or export will through an erro saying require is not defined.
+*/
 (function(e){function f(){}function g(a){if(!a)return 0;a=a.split(".");return 1E4*parseInt(a[0])+100*parseInt(a[1])+parseInt(a[2])}function h(a){for(var a=a.replace(/-/g,"_"),a=a.split("."),b=d,c=0;c<a.length;c++)b[a[c]]===void 0&&(b[a[c]]=new f),b=b[a[c]];return b}var d=e.namespace;if(d){if(g("3.0.1")<=g(d.VERSION))return;f=d.constructor}else e.namespace=d=new f;d.VERSION="3.0.1";e=f.prototype;e.module=function(a,b){var c=h(a);b&&b(c,h);return c};e.extend=function(a){for(var b in a)a.hasOwnProperty(b)&&
 (this[b]=a[b])}})(this);
-namespace.module('TestingModule', function (exports, require) {
 
+/*
+* * * Create a Test module
+*/
+namespace.module('TestingModule', function (exports, require) {
   /*
   * * * Test for the input stream
   */
