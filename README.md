@@ -1,5 +1,5 @@
 # gulp-project-automation
-<3
+
 This Gulp file prepares an AngularJs app that is mixed with Typescript to be ready for publishing. 
 
 The app first passes through a phase which is the development phase, and then it's piped to the building phase.
@@ -13,7 +13,12 @@ Any new TS file will be compiled and added automatically to the index.html throu
 In the building phase images are compressed, HTML/CSS/JS files are minifed, fonts are copied to the build destination, angular dependencies get fixed, and html files are added to the angular template cache to minimize 
 Ajax calls.
 
-Sources to the files can be simply specified in the gulp.config.js
+
+Installation:
+  Open up the terminal, and run these commands
+    bower install
+    npm install
+
 
 This gulp file takes into consideration the following App structure:
 
