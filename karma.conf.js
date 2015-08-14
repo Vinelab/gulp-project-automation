@@ -1,29 +1,33 @@
-module.exports = function(config){
-  config.set({
-    basePath : '',
-    
-    files : [
-      './Test/GulpTest.js'
-    ],
+(function () {
+    module.exports = function(config){
+        config.set({
 
-    port : 9091,
+            basePath : '',
 
-    singleRun : true,
+            files : [
+                './Test/GulpTest.js'
+            ],
 
-    autoWatch : true,
+            port : 9091,
 
-    frameworks: ['jasmine'],
+            singleRun : true,
 
-    browsers : ['Chrome'],
+            autoWatch : true,
 
-    plugins : [
-            'karma-chrome-launcher',
-            'karma-jasmine',
-            "karma-spec-reporter"
-    ],
+            frameworks: ['jasmine'],
 
-    reporters: ["spec"],
+            browsers : ['Chrome'],
 
-    specReporter: {maxLogLines: 5}
-  });
-};
+            plugins : [
+                'karma-chrome-launcher',
+                'karma-jasmine',
+                "karma-spec-reporter"
+            ],
+
+            reporters: ["spec"],
+
+            specReporter: {maxLogLines: 5}
+
+        });
+    };
+}());

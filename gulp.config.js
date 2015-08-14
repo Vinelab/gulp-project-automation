@@ -1,26 +1,28 @@
-module.exports = function () {
-	var config = {
-		allcss: "./development/app/_public/styles/css/*.css",
+(function() {
+	module.exports = function () {
+		var config = {
+			allcss: "./development/app/_public/styles/css/*.css",
 
-		allfonts: "./app/_public/styles/fonts/*.*",
+			allfonts: "./app/_public/styles/fonts/*.*",
 
-		allhtml: "./app/**/*.html",
+			allhtml: "./app/**/*.html",
 
-		allimg: "./app/_public/img/*.*",
+			allimg: "./app/_public/img/*.*",
 
-		alljs: ["./development/app/app.module.js", "./development/app/app.*.js", "./development/app/**/*.js"],
+			alljs: ["./development/app/app.module.js", "./development/app/app.*.js", "./development/app/**/*.js"],
 
-		allless: "./app/_public/styles/less/*.less",
+			allless: "./app/_public/styles/less/*.less",
 
-		allts: ["./app/app.*.ts", "./app/**/*.ts"],
+			allts: ["./app/app.*.ts", "./app/**/*.ts"],
 
-		build: "./build/app/",
+			build: "./build/app/",
 
-		client: "./app",
+			client: "./app",
 
-		dev: "./development/app/",
+			dev: "./development/app/",
 
-		index: "./index.html"
+			index: "./index.html"
+		};
+		return config;
 	};
-	return config;
-};
+}());

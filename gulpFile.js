@@ -2,15 +2,17 @@
 * * * Authored by Mohammad K. Sidani: mohdsidani@gmail.com / moe.sidani@vinelab.com
 */
 
-'use strict';
+(function () {
+  
+  'use strict';
 
-var browserSync = require("browser-sync");
-var clean = require("del");
-var config = require("./gulp.config.js")();
-var gulp = require("gulp");
-var lazy = require("gulp-load-plugins")({lazy: true});
-var runSequence = require("run-sequence");
-var wiredep = require("wiredep");
+  var browserSync = require("browser-sync");
+  var clean = require("del");
+  var config = require("./gulp.config.js")();
+  var gulp = require("gulp");
+  var lazy = require("gulp-load-plugins")({lazy: true});
+  var runSequence = require("run-sequence");
+  var wiredep = require("wiredep");
 
 /*
 * * * Compile Typescript  files
@@ -386,3 +388,4 @@ gulp.task("env-build", ["minify-html",
                         "images", 
                         "copy-fonts", 
                         "template-cache"], useRefBuild);
+}());
