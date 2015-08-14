@@ -8,7 +8,7 @@
 
       rm -rf "gulp-project-automation"
   
-      bower install (Optional: in case there's no bower.json file in the current project)
+      bower install (Installs libraries: Angular, jQuery..needed for the app development - optional)
     
       npm install
     
@@ -18,7 +18,7 @@
 
       gulp env-build
       
-  For Testing, run
+  For testing, run
 
       karma start karma.conf.js (Results can be seen successfully passed using karma-spec-reporter)
     
