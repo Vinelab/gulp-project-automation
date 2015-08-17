@@ -62,7 +62,7 @@ gulp.task("ts-compiler", function () {
 gulp.task("less-css", function () {
   return gulp.src(config.allless)
              .pipe(lazy.less())
-             .pipe(gulp.dest(config.dev + "_public/styles/css"));
+             .pipe(gulp.dest(config.dev + "_public/styles/css/"));
 });
 
 
@@ -95,7 +95,7 @@ gulp.task("bower-injector", function () {
 gulp.task("concat-css", function () {
   return gulp.src(config.allcss)
              .pipe(lazy.concatCss("main.css"))
-             .pipe(gulp.dest("./app/_public/styles/css"));
+             .pipe(gulp.dest("./app/_public/styles/css/"));
 });
 
 
@@ -134,31 +134,24 @@ gulp.task("copy-html", function () {
 * * * also deleted from index.html
 */ 
 gulp.task("ts-watcher", function () {
-    lazy.watch("./app/**/")
-        .on("add", function (path) {
-            var index = path.indexOf(config.client);
-            var filePath = path.substring(index);
-            var suffix = path.substring(path.length - 3);
-            console.log("New file has been added " + filePath);
-            if (suffix === ".ts") {
-              runSequence("ts-compiler", "js-injector");
-            }
+    lazy.watch(["./app/**/", "!./app/*.html", "!./app/**/**/**/*.less", "!./app/**/*.html", "!./app/**/**/**/*.css"])
+        .on("add", function (path) {  
+          console.log("New file has been added " + path);
+          runSequence("ts-compiler", "js-injector"); 
         })
-        .on("change", function () {
-          gulp.start("ts-compiler");
+        .on("change", function (path) {
+            console.log("File has been changed " + path);
+            gulp.start("ts-compiler");
         })
         .on("unlink", function (path) {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
             var suffix = path.substring(path.length - 3);
             console.log("File has been deleted " + filePath);
-            if (suffix === ".ts") {
-              var jsPath = filePath.replace(".ts", ".js").replace("/app", "/development/app");
-              console.log(jsPath);
-              clean(jsPath, function () {
-                gulp.start("js-injector");
-              });
-            }
+            var jsPath = filePath.replace(".ts", ".js").replace("/app", "/development/app");
+            clean(jsPath, function () {
+              gulp.start("js-injector");
+            });
         });
 });
 
@@ -169,30 +162,27 @@ gulp.task("ts-watcher", function () {
 * * * will be also deleted from index.html
 */ 
 gulp.task("less-watcher", function () {
-    lazy.watch("./app/**/")
+    lazy.watch(["./app/**/", "!./app/*.html", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css"])
         .on("add", function (path) {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
             var suffix = path.substring(path.lastIndexOf("."));
-            console.log("New file has been added " + filePath);
-            if (suffix === ".less") {
-              runSequence("less-css", "css-injector");
-            }
+            console.log("New file has been added " + path);
+            runSequence("less-css", "concat-css", "css-injector");
         })
-        .on("change", function () {
-          gulp.start("less-css");
+        .on("change", function (path) {
+            console.log("File has been changed " + path);
+            runSequence("less-css", "concat-css");
         })
         .on("unlink", function (path) {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
             var suffix = path.substring(path.lastIndexOf("."));
-            console.log("New file has been deleted " + filePath);
-            if (suffix === ".less") {
-              var cssPath = filePath.replace("less", "css").replace(".less", ".css").replace("/app", "/development/app");
-              clean(cssPath, function () {
-                gulp.start("css-injector");
-              });
-            }
+            console.log("File has been deleted " + filePath);
+            var cssPath = filePath.replace("less", "css").replace(".less", ".css").replace("/app", "/development/app");
+            clean(cssPath, function () {
+              gulp.start("css-injector");
+            });
         });
 });
 
@@ -243,9 +233,9 @@ function startBrowserSync() {
 
 
 
-  /*                                 */
- /* * *     Build Environment   * * */
-/*                                 */
+  /*                                  */
+ /* * *     Build Environment    * * */
+/*                                  */
 
 /*
 * * * Minify Html
