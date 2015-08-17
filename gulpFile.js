@@ -14,6 +14,7 @@
   var runSequence = require("run-sequence");
   var wiredep = require("wiredep");
 
+
   /*                                 */
  /* * * Development Environment * * */
 /*                                 */
@@ -310,26 +311,13 @@ gulp.task("minify-js", function () {
 
 
 /*
-* * * NgAnnotate   
-* *   /*@ngInject*/
+* * * Fix angular's dependecie's names 
+*/
 gulp.task("dependency-fixer", function () {
   return gulp.src(config.alljs)
              .pipe(lazy.ngAnnotate()) 
              .pipe(gulp.dest(config.dev));
 });
-
-
-/*
-* * * It goes into the index.html. It merges all .js files into build.js and all .css files into main.css. 
-*/
-/*function useRefDev () {
-  var assets = lazy.useref.assets();
-  gulp.src(config.index)
-      .pipe(assets)
-      .pipe(assets.restore())
-      .pipe(lazy.useref())
-      .pipe(gulp.dest(config.dev));
-}*/
 
 
 /*
