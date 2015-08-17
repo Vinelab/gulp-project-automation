@@ -1,19 +1,21 @@
 (function() {
 	module.exports = function () {
 		var config = {
+			var app = "./app/";
+
 			allcss: "./development/app/_public/styles/css/*.css",
 
-			allfonts: "./app/_public/styles/fonts/*.*",
+			allfonts: client + "_public/styles/fonts/*.*",
 
-			allhtml: "./app/**/*.html",
+			allhtml: client + "**/*.html",
 
-			allimg: "./app/_public/img/*.*",
+			allimg: client + "_public/img/*.*",
 
 			alljs: ["./development/app/app.module.js", "./development/app/app.*.js", "./development/app/**/*.js"],
 
-			allless: "./app/_public/styles/less/*.less",
+			allless: client + "_public/styles/less/*.less",
 
-			allts: ["./app/app.*.ts", "./app/**/*.ts"],
+			allts: [client + "app.*.ts", client + "**/*.ts"],
 
 			build: "./build/app/",
 
