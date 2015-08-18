@@ -30,29 +30,29 @@ gulp.task("list-tasks", lazy.taskListing);
 */
 gulp.task("ts-compiler", function () {
   return gulp.src(config.allts)
-    .pipe(lazy.typescript({
-      // Generates corresponding .map file. 
-      sourceMap : false,
+             .pipe(lazy.typescript({
+                // Generates corresponding .map file. 
+                sourceMap : false,
+                
+                // Generates corresponding .d.ts file. 
+                declaration : true,
  
-      // Generates corresponding .d.ts file. 
-      declaration : true,
+                // Do not emit comments to output. 
+                removeComments : false,
  
-      // Do not emit comments to output. 
-      removeComments : false,
+                // Warn on expressions and declarations with an implied 'any' type. 
+                noImplicitAny : false,
  
-      // Warn on expressions and declarations with an implied 'any' type. 
-      noImplicitAny : false,
+                // Skip resolution and preprocessing. 
+                noResolve : false,
  
-      // Skip resolution and preprocessing. 
-      noResolve : false,
+                // Specify module code generation: 'commonjs' or 'amd'   
+                module : 'amd',
  
-      // Specify module code generation: 'commonjs' or 'amd'   
-      module : 'amd',
- 
-      // Specify ECMAScript target version: 'ES3' (default), or 'ES5' 
-      target : 'ES5'
-    }))
-    .pipe(gulp.dest(config.dev));
+                // Specify ECMAScript target version: 'ES3' (default), or 'ES5' 
+                target : 'ES5'
+            }))
+            .pipe(gulp.dest(config.dev));
 });
 
 
@@ -134,7 +134,7 @@ gulp.task("copy-html", function () {
 * * * also deleted from index.html
 */ 
 gulp.task("ts-watcher", function () {
-    lazy.watch(["./app/**/", "!./app/*.html", "!./app/**/**/**/*.less", "!./app/**/*.html", "!./app/**/**/**/*.css"])
+    lazy.watch(["./app/**/", "!./app/**/*.html" ,"!./app/**/**/**/*.less", "!./app/**/**/**/*.css"])
         .on("add", function (path) {  
           console.log("New file has been added " + path);
           runSequence("ts-compiler", "js-injector"); 
@@ -147,8 +147,8 @@ gulp.task("ts-watcher", function () {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
             var suffix = path.substring(path.length - 3);
-            console.log("File has been deleted " + filePath);
             var jsPath = filePath.replace(".ts", ".js").replace("/app", "/development/app");
+            console.log("File has been deleted " + filePath);
             clean(jsPath, function () {
               gulp.start("js-injector");
             });
@@ -162,7 +162,7 @@ gulp.task("ts-watcher", function () {
 * * * will be also deleted from index.html
 */ 
 gulp.task("less-watcher", function () {
-    lazy.watch(["./app/**/", "!./app/*.html", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css"])
+    lazy.watch(["./app/**/", "!./app/*.ts", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css"])
         .on("add", function (path) {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
@@ -178,8 +178,8 @@ gulp.task("less-watcher", function () {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
             var suffix = path.substring(path.lastIndexOf("."));
-            console.log("File has been deleted " + filePath);
             var cssPath = filePath.replace("less", "css").replace(".less", ".css").replace("/app", "/development/app");
+            console.log("File has been deleted " + filePath);
             clean(cssPath, function () {
               gulp.start("css-injector");
             });
