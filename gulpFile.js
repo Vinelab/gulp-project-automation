@@ -54,6 +54,35 @@ gulp.task("ts-compiler", function () {
               }))
               .pipe(gulp.dest(config.dev));
 });
+/*
+* * * This task is used for testing. Compile a simple ts file to js
+*/
+gulp.task("test-ts-compiler", function () {
+          return gulp.src("./Test/lib/*.ts")
+                       .pipe(lazy.typescript({
+                        // Generates corresponding .map file. 
+                        sourceMap : false,
+                
+                        // Generates corresponding .d.ts file. 
+                        declaration : true,
+ 
+                        // Do not emit comments to output. 
+                        removeComments : false,
+ 
+                        // Warn on expressions and declarations with an implied 'any' type. 
+                        noImplicitAny : false,
+ 
+                        // Skip resolution and preprocessing. 
+                        noResolve : false,
+ 
+                        // Specify module code generation: 'commonjs' or 'amd'   
+                        module : "amd",
+ 
+                        // Specify ECMAScript target version: 'ES3' (default), or 'ES5' 
+                        target : "ES5"
+                      }))
+                      .pipe(gulp.dest("./Test/lib/dest"));
+});
 
 
 /*
@@ -64,6 +93,14 @@ gulp.task("less-css", function () {
                .pipe(lazy.less())
                .pipe(gulp.dest(config.dev + "_public/styles/css/"));
 });
+/*
+* * *This task is used for testing. Compile simple less file to css
+*/
+gulp.task("test-less-css", function () {
+    return gulp.src("./Test/lib/*.less")
+               .pipe(lazy.less())
+               .pipe(gulp.dest("./Test/lib/dest"));
+});
 
 
 /*
@@ -73,6 +110,14 @@ gulp.task("concat-css", function () {
     return gulp.src(config.allcss)
                .pipe(lazy.concatCss("main.css"))
                .pipe(gulp.dest(config.dev + "_public/styles/css/"));
+});
+/*
+* * *This task is used for testing. Concat css files
+*/
+gulp.task("test-concat-css", function () {
+    return gulp.src(["./Test/lib/dest/test-style*.css", "./Test/lib/dest/newstyle.css"])
+               .pipe(lazy.concatCss("test-main.css"))
+               .pipe(gulp.dest("./Test/lib/dest/dest/"));
 });
 
 
@@ -87,6 +132,17 @@ gulp.task("auto-prefixer", function () {
                }))
                .pipe(gulp.dest(config.dev + "_public/styles/css/"));
 });
+/*
+* * * This task is used for testing. Simply adds browser prefixes to the main css file test-main.css
+*/
+gulp.task("test-auto-prefixer", function () {
+    return gulp.src("./Test/lib/dest/dest/test-main.css")
+               .pipe(lazy.autoprefixer({
+                  browsers: ["> 0%"],
+                  cascade: true
+               }))
+               .pipe(gulp.dest("./Test/lib/dest/dest/"));
+});
 
 
 /*
@@ -96,6 +152,15 @@ gulp.task("bower-injector", function () {
     return gulp.src(config.index)
                .pipe(wiredep.stream())
                .pipe(gulp.dest(""));
+});
+/*
+* * * This task is used for testing. Simply adds bower components into test-index.html
+*/
+gulp.task("test-bower-injector", function () {
+    return gulp.src(config.index)
+               .pipe(wiredep.stream())
+               .pipe(lazy.rename({prefix: 'test-'}))
+               .pipe(gulp.dest("./Test/lib/dest/dest"));
 });
 
 
@@ -107,7 +172,14 @@ gulp.task("js-injector", function () {
                .pipe(lazy.inject(gulp.src(config.alljs, {read: false})))
                .pipe(gulp.dest(""));
 });
-
+/*
+* * * This task is used for testing. Simply adds js scripts components into test-index.html
+*/
+gulp.task("test-js-injector", function () {                                    
+    return gulp.src("./Test/lib/dest/dest/test-index.html")
+               .pipe(lazy.inject(gulp.src("./test/lib/dest/*.js", {read: false})))
+               .pipe(gulp.dest("./Test/lib/dest/dest"));
+});
 
 /*
 * * * Inject all Css files into index.html
@@ -117,7 +189,14 @@ gulp.task("css-injector", function () {
                .pipe(lazy.inject(gulp.src(config.dev + "_public/styles/css/main.css", {read: false})))
                .pipe(gulp.dest(""));
 });
-
+/*
+* * * This task is used for testing. Simply adds Css scripts components into test-index.html
+*/
+gulp.task("test-css-injector", function () {
+    return gulp.src("./Test/lib/dest/dest/test-index.html")
+               .pipe(lazy.inject(gulp.src("./Test/lib/dest/dest/test-main.css", {read: false})))
+               .pipe(gulp.dest("./Test/lib/dest/dest/"));
+});
 
 /*
 * * * Move all HTML files to "development" destination
@@ -168,7 +247,7 @@ gulp.task("less-watcher", function () {
             var filePath = path.substring(index);
             var suffix = path.substring(path.lastIndexOf("."));
             console.log("New file has been added " + path);
-            runSequence("less-css", "concat-css", "css-injector");
+            runSequence("less-css", "concat-css", "auto-prefixer", "css-injector");
         })
         .on("change", function (path) {
             console.log("File has been changed " + path);
@@ -245,6 +324,15 @@ gulp.task("minify-html", function () {
                .pipe(lazy.minifyHtml({conditionals: true, spare:true}))
                .pipe(gulp.dest(config.build));
 });
+/*
+* * * This task is used for testing. To check whether a simple html page has been minified or not
+*/
+gulp.task("test-minify-html", function () {
+    return gulp.src("./Test/lib/test.html")
+               .pipe(lazy.minifyHtml({conditionals: true, spare:true}))
+               .pipe(lazy.rename({suffix: ".min"}))
+               .pipe(gulp.dest("./Test/lib/dest/"));
+});
 
 
 /*
@@ -286,6 +374,15 @@ gulp.task("minify-css", function () {
                .pipe(lazy.rename({suffix: '.optimized.min'}))
                .pipe(gulp.dest(config.build));
 });
+/*
+* * * This task is used for testing. To check whether a simple css file has been minified or not
+*/
+gulp.task("test-minify-css", function () {
+    return gulp.src("./Test/lib/test.css")
+               .pipe(lazy.minifyCss({keepBreaks: false}))
+               .pipe(lazy.rename({suffix: ".min"}))
+               .pipe(gulp.dest("./Test/lib/dest/"));
+});
 
 
 /*
@@ -297,6 +394,16 @@ gulp.task("minify-js", function () {
                .pipe(lazy.uglify())
                .pipe(lazy.rename({suffix: '.optimized.min'}))
                .pipe(gulp.dest(config.build));
+});
+/*
+* * * This task is used for testing. To check whether a simple css file has been minified or not
+*/
+gulp.task("test-minify-js", function () {
+    return gulp.src("./Test/lib/test.js")
+               .pipe(lazy.stripDebug())
+               .pipe(lazy.uglify())
+               .pipe(lazy.rename({suffix: ".min"}))
+               .pipe(gulp.dest("./Test/lib/dest/"));
 });
 
 
@@ -336,12 +443,14 @@ function useRefBuild () {
 */
 function rename() {
   gulp.src(config.build + "build.optimized.min.js")
-      .pipe(lazy.rename("./build/app/build.js")).pipe(gulp.dest(""))
+      .pipe(lazy.rename("./build/app/build.js"))
+      .pipe(gulp.dest(""))
       .on("end", function () {
         clean(config.build + "build.optimized.min.js");
       });
   gulp.src(config.build + "main.optimized.min.css")
-      .pipe(lazy.rename("./build/app/main.css")).pipe(gulp.dest(""))
+      .pipe(lazy.rename("./build/app/main.css"))
+      .pipe(gulp.dest(""))
       .on("end", function () {
         clean(config.build + "main.optimized.min.css");
       });
