@@ -10,7 +10,7 @@
       var ts_watcher, less_watcher;
 
 
-      test_ts_compiler("./Test/lib/dest/file.js", "normal"); // FIRST CALL 
+      test_ts_compiler("./Test/dest/file.js", "normal"); // FIRST CALL 
 
       /*
       * * * It should compile from ts to js and read the js file from the destination folder
@@ -53,14 +53,14 @@
                 console.log('exec error: ' + error);
               }
               if (type === "normal") {
-                  fs.readFile("./Test/lib/dest/test-style.css", function (error) {
+                  fs.readFile("./Test/dest/test-style.css", function (error) {
                     if (error !== null) {
                       console.log("Error: File doesn't exist.");
                     } else {
                       console.log("SUCESS: File has been successfully read: test-style.css");
                     }
                   });
-                  fs.readFile("./Test/lib/dest/test-style1.css", function (error) {
+                  fs.readFile("./Test/dest/test-style1.css", function (error) {
                     if (error !== null) {
                       console.log("Error: File doesn't exist.");
                     } else {
@@ -70,7 +70,7 @@
                   });
               }
               else {
-                fs.readFile("./Test/lib/dest/newstyle.css", function (error) {
+                fs.readFile("./Test/dest/newstyle.css", function (error) {
                     if (error !== null) {
                       console.log("Error: File doesn't exist.");
                     } else {
@@ -95,7 +95,7 @@
                 console.log('exec error: ' + error);
               }
 
-              fs.readFile("./Test/lib/dest/dest/test-main.css", function (error) {
+              fs.readFile("./Test/dest/dest/test-main.css", function (error) {
                 if (error !== null) {
                   console.log("Error: File doesn't exist.");
                 } else {
@@ -119,7 +119,7 @@
                 console.log('exec error: ' + error);
               }
 
-              fs.readFile("./Test/lib/dest/dest/test-main.css", function (error, data) {
+              fs.readFile("./Test/dest/dest/test-main.css", function (error, data) {
                 if (error !== null) {
                   console.log("Error: File doesn't exist.");
                 } else {
@@ -153,7 +153,7 @@
                 console.log('exec error: ' + error);
               }
 
-              fs.readFile("./Test/lib/dest/dest/test-index.html", function (error, data) {
+              fs.readFile("./Test/dest/dest/test-index.html", function (error, data) {
                 if (error !== null) {
                   console.log("Error: File doesn't exist.");
                 } else {
@@ -183,14 +183,14 @@
                 console.log('exec error: ' + error);
               }
 
-              fs.readFile("./Test/lib/dest/dest/test-index.html", function (error, data) {
+              fs.readFile("./Test/dest/dest/test-index.html", function (error, data) {
                 if (error !== null) {
                   console.log("Error: File doesn't exist.");
                 } else {
                   console.log("SUCESS: File has been read successfully.");
                   var buffer = data.toString();
-                  console.log('<script src="/test/lib/dest/' + file + '"></script>');
-                  if (buffer.search('<script src="/test/lib/dest/' + file + '"></script>') !== -1) {
+                  console.log('<script src="/test/dest/' + file + '"></script>');
+                  if (buffer.search('<script src="/test/dest/' + file + '"></script>') !== -1) {
                     console.log("SUCESS: The script with src pointing to " + file + " has been successfully added to test-index.html");
                     if (file.search("newfile") === -1)
                       test_css_injector("normal");
@@ -223,13 +223,13 @@
                 console.log('exec error: ' + error);
               }
 
-              fs.readFile("./Test/lib/dest/dest/test-index.html", function (error, data) {
+              fs.readFile("./Test/dest/dest/test-index.html", function (error, data) {
                 if (error !== null) {
                   console.log("Error: File doesn't exist.");
                 } else {
                   console.log("SUCESS: File has been read successfully.");
                   var buffer = data.toString();
-                  if (buffer.search('<link rel="stylesheet" href="/Test/lib/dest/dest/test-main.css">') !== -1) {
+                  if (buffer.search('<link rel="stylesheet" href="/Test/dest/dest/test-main.css">') !== -1) {
                     console.log("SUCESS: The stylesheet with href pointing to test-main.css has been successfully added to test-index.html");
                     if (type === "normal") {
                       test_ts_watcher();
@@ -260,7 +260,6 @@
         console.log(" ");
           
         ts_watcher = fs.watch("./Test/lib/", function (event, file) {
-
             if (event === "rename") {
               fs.readFile("./Test/lib/newfile.ts", function (error, data) {
                 if (error !== null) {
@@ -289,7 +288,7 @@
      };
 
      function delete_file (file, type) {
-        fs.unlink("./Test/lib/dest/" + file, function (error, data) { 
+        fs.unlink("./Test/dest/" + file, function (error, data) { 
           if (type === "js")
             test_js_injector(file);
           else if (type === "css") {
@@ -322,7 +321,6 @@
         console.log(" ");
           
         less_watcher = fs.watch("./Test/lib/", function (event, file) {
-
             if (event === "rename") {
               fs.readFile("./Test/lib/newstyle.less", function (error, data) {
                 if (error !== null) {
@@ -361,9 +359,9 @@
           });
           console.log("Initiated browser-sync");
           setTimeout(function () {
-            test_minify("gulp test-minify-html", "./Test/lib/test.html", "./Test/lib/dest/test.min.html", "11", "html");
-            test_minify("gulp test-minify-css", "./Test/lib/test.css", "./Test/lib/dest/test.min.css", "12", "css");
-            test_minify("gulp test-minify-js", "./Test/lib/test.js", "./Test/lib/dest/test.min.js", "13", "js");
+            test_minify("gulp test-minify-html", "./Test/lib/test.html", "./Test/dest/test.min.html", "11", "html");
+            test_minify("gulp test-minify-css", "./Test/lib/test.css", "./Test/dest/test.min.css", "12", "css");
+            test_minify("gulp test-minify-js", "./Test/lib/test.js", "./Test/dest/test.min.js", "13", "js");
           }, 500);
         }, 5000); 
     };
