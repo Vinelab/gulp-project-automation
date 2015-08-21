@@ -20,7 +20,7 @@
       
   For testing, run
 
-      karma start karma.conf.js (Results can be seen successfully passed using karma-spec-reporter)
+      node ./Test/TEST.js (Results can be seen successfully passed using karma-spec-reporter)
     
     
 # About this Gulp
