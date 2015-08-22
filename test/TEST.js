@@ -300,6 +300,21 @@
         });
      };
 
+     function delete_directory (path) {
+      if( fs.existsSync(path) ) {
+        fs.readdirSync(path).forEach(function(file,index) {
+          var curPath = path + "/" + file;
+          if(fs.lstatSync(curPath).isDirectory()) { 
+            delete_directory(curPath);
+          } 
+          else { 
+            fs.unlinkSync(curPath);
+          }
+        });
+        fs.rmdirSync(path);
+      }
+    };
+
      function delete_file (file, type) {
         fs.unlink("./Test/dest/" + file, function (error, data) { 
           if (type === "js")
@@ -379,7 +394,6 @@
         }, 5000); 
     };
 
-
     /*
     * * * It should minify html file
     */
@@ -414,6 +428,7 @@
               console.log("You can run the Gulp tasks: gulp <task_name> or gulp env-development / gulp env-build");
               console.log(" ");
               console.log("Press CTRL + C to exit");
+              delete_directory("./Test/dest");
             }
         }, 500);
       });
