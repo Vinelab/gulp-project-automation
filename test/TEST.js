@@ -8,6 +8,7 @@
       var exec = require('child_process').exec;
       var browserSync = require("browser-sync");
       var ts_watcher, less_watcher;
+      var count = 0;
 
 
       test_ts_compiler("./Test/dest/file.js", "normal"); // FIRST CALL 
@@ -195,8 +196,12 @@
                     if (file.search("newfile") === -1)
                       test_css_injector("normal");
                     else {
+                      ++count;
                       console.log(" ");
-                      console.log("New file 'newfile.ts' has been added and compiled to js. You can either edit it or delete it.");
+                      console.log("New file 'newfile.ts' has been added and compiled to js.");
+                      console.log(" ");
+                      console.log("Deleting 'newfile.ts'...");
+                      delete_new_file("newfile.ts");
                     }
                   } else {
                     console.error("Error: There was an error adding " + file + " script into test-index.html. Maybe it has been unInjected.");
@@ -235,7 +240,10 @@
                       test_ts_watcher();
                     }
                     else if (type === "new file") {
-                      console.log("New file 'newstyle.less' has been added and compiled to css. You can either edit it or delete it.");
+                      console.log("New file 'newstyle.less' has been added and compiled to css. ");
+                      console.log(" ");
+                      console.log("Deleting 'newstyle.less'...");
+                      delete_new_file("newstyle.less");
                     }
                     else if (type === "delete file") { 
                       less_watcher.close();
@@ -287,6 +295,11 @@
         });
      };
 
+     function delete_new_file (file) {
+        fs.unlink("./Test/lib/" + file, function (error, data) { 
+        });
+     };
+
      function delete_file (file, type) {
         fs.unlink("./Test/dest/" + file, function (error, data) { 
           if (type === "js")
@@ -297,7 +310,7 @@
         });
      };
 
-     /*function change_file () {
+     function change_file () {
         fs.readFile("./Test/lib/newfile.ts", 'utf8', function (error, data) {
           if (error) 
             return console.log(error);
@@ -309,7 +322,7 @@
               return console.log(err);
           });
         });
-     };*/
+     };
 
 
      /*
@@ -397,7 +410,9 @@
             if (num === "13") {
               console.log(" ");
               console.log("By reaching this point, Gulp seems to be running perfectly on your system.");
+              console.log(" ");
               console.log("You can run the Gulp tasks: gulp <task_name> or gulp env-development / gulp env-build");
+              console.log(" ");
               console.log("Press CTRL + C to exit");
             }
         }, 500);
