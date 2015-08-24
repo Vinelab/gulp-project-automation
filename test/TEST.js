@@ -10,7 +10,6 @@
       var ts_watcher, less_watcher;
       var count = 0;
 
-
       test_ts_compiler("./Test/dest/file.js", "normal"); // FIRST CALL 
 
       /*
@@ -383,7 +382,8 @@
         
         setTimeout(function () {
           browserSync.init({
-            server: "./app"
+            server: "./app",
+            browser: "safari"
           });
           console.log("Initiated browser-sync");
           setTimeout(function () {
@@ -423,12 +423,15 @@
             console.log("SUCESS: The file " + file + " has been successfully minifed.");
             if (num === "13") {
               console.log(" ");
-              console.log("By reaching this point, Gulp seems to be running perfectly on your system.");
+              console.log("'Gulp' and the NPM packages required to run the 'Gulp' tasks are perfectly installed on your system.");
               console.log(" ");
               console.log("You can run the Gulp tasks: gulp <task_name> or gulp env-development / gulp env-build");
               console.log(" ");
-              console.log("Press CTRL + C to exit");
               delete_directory("./Test/dest");
+              setTimeout(function () {
+                exec("kill " + process.pid, function (err, data) { 
+                  console.log(err, data); 
+                })}, 1000);
             }
         }, 500);
       });
