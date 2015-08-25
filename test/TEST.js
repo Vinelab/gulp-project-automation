@@ -8,7 +8,6 @@
       var exec = require('child_process').exec;
       var browserSync = require("browser-sync");
       var ts_watcher, less_watcher;
-      var count = 0;
 
       test_ts_compiler("./Test/dest/file.js", "normal"); // FIRST CALL 
 
@@ -195,7 +194,6 @@
                     if (file.search("newfile") === -1)
                       test_css_injector("normal");
                     else {
-                      ++count;
                       console.log(" ");
                       console.log("New file 'newfile.ts' has been added and compiled to js.");
                       console.log(" ");
