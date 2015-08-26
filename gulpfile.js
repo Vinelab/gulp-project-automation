@@ -341,8 +341,17 @@ gulp.task("test-minify-html", function () {
 gulp.task("images", function () {
     return gulp.src(config.allimg)
                .pipe(lazy.imagemin({optimizationLevel: 5}))
-               .pipe(gulp.dest(config.build + "_public/img"))
+               .pipe(gulp.dest(config.build + "_public/img"));
 });
+/*
+* * * This tasks is used for testing. To check whether a simple image has been minified or not
+*/
+gulp.task("test-images", function () {
+    return gulp.src("./Test/lib/img.jpg")
+               .pipe(lazy.imagemin({optimizationLevel: 5}))
+               .pipe(gulp.dest("./Test/dest/"));
+});
+
 
 
 /*
@@ -362,6 +371,15 @@ gulp.task("template-cache", function () {
                .pipe(lazy.minifyHtml({empty: true}))
                .pipe(lazy.angularTemplatecache())
                .pipe(gulp.dest(config.build));
+});
+/*
+* * * This task is used for testing.
+*/
+gulp.task("test-template-cache", function () {
+    return gulp.src("./Test/lib/tmpl.html")
+               .pipe(lazy.minifyHtml({empty: true}))
+               .pipe(lazy.angularTemplatecache())
+               .pipe(gulp.dest("./Test/dest/"));
 });
 
 
