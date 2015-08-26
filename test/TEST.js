@@ -297,7 +297,7 @@
         });
      };
 
-     function delete_directory (path) {
+    function delete_directory (path) {
       if( fs.existsSync(path) ) {
         fs.readdirSync(path).forEach(function(file,index) {
           var curPath = path + "/" + file;
@@ -312,7 +312,7 @@
       }
     };
 
-     function delete_file (file, type) {
+    function delete_file (file, type) {
         fs.unlink("./Test/dest/" + file, function (error, data) { 
           if (type === "js")
             test_js_injector(file);
@@ -320,7 +320,7 @@
             test_css_injector("delete file");
           }
         });
-     };
+    };
 
      function change_file () {
         fs.readFile("./Test/lib/newfile.ts", 'utf8', function (error, data) {
@@ -367,7 +367,6 @@
             write_new_file("newstyle.less");
         }, 50);
       };
-
 
     /*
     * * * It should check if browser sync package is active and working good
@@ -420,18 +419,79 @@
           else 
             console.log("SUCESS: The file " + file + " has been successfully minifed.");
             if (num === "13") {
+              test_minify_images();
+            }
+        }, 500);
+      });
+    };
+
+    /*
+    * * * It should minify an image
+    */ 
+    function test_minify_images () {
+      console.log(" ");
+      console.log("14- test_minify_images");
+      console.log(" ");
+
+      var bufferBeforeMin, bufferAfterMin;
+      fs.readFile("./Test/lib/img.jpg", function (error, data) {
+          if (error !== null) {
+            console.log("Error: File doesn't exist.");
+          } 
+          bufferBeforeMin = data.length;
+      });
+      exec("gulp test-images", function (error, stdout, stderr) {
+        console.log(stdout);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+        fs.readFile("./Test/dest/img.jpg", function (error, data) {
+            if (error !== null) {
+              console.log("Error: File doesn't exist.");
+            } 
+            bufferAfterMin = data.length;
+            if(bufferAfterMin < bufferBeforeMin) {
+              console.log("The image has been successfully minified.");
+              test_tempalte_cache();
+            }
+        });
+      });
+    };  
+
+    /*
+    * * * IT should put an HTML partial in the cache
+    */  
+    function test_tempalte_cache () {
+      console.log(" ");
+      console.log("15- test_template_cache");
+      console.log(" ");
+      var bufferAfterMin;
+
+      exec("gulp test-template-cache", function (error, stdout, stderr) {
+        console.log(stdout);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+        fs.readFile("./Test/dest/templates.js", function (error, data) {
+            if (error !== null) {
+              console.log("Error: File doesn't exist.");
+            } 
+            bufferAfterMin = data.toString();
+            if(bufferAfterMin.search(".run") !== -1) {
+              console.log("The html template has been put in the cache.");
               console.log(" ");
               console.log("'Gulp' and the NPM packages required to run the 'Gulp' tasks are perfectly installed on your system.");
               console.log(" ");
               console.log("You can run the Gulp tasks: gulp <task_name> or gulp env-development / gulp env-build");
               console.log(" ");
+              console.log(" ");
+              console.log(" ");
               delete_directory("./Test/dest");
               setTimeout(function () {
                 exec("kill " + process.pid, function (err, data) { 
-                  console.log(err, data); 
-                })}, 1000);
+              })}, 1000);
             }
-        }, 500);
+        });
       });
     };
 }());
