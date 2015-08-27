@@ -185,7 +185,8 @@
               fs.readFile("./Test/dest/dest/test-index.html", function (error, data) {
                 if (error !== null) {
                   console.log("Error: File doesn't exist.");
-                } else {
+                } 
+                else {
                   console.log("SUCESS: File has been read successfully.");
                   var buffer = data.toString();
                   console.log('<script src="/test/dest/' + file + '"></script>');
@@ -200,7 +201,8 @@
                       console.log("Deleting 'newfile.ts'...");
                       delete_new_file("newfile.ts");
                     }
-                  } else {
+                  } 
+                  else {
                     console.error("Error: There was an error adding " + file + " script into test-index.html. Maybe it has been unInjected.");
                     ts_watcher.close();
                     setTimeout(function () {
@@ -287,16 +289,25 @@
         }, 50);
       };
 
+      /*
+      * * * It writes a file
+      */
      function write_new_file (file) {
         fs.writeFile("./Test/lib/" + file, function (error, data) { 
         });
      };
 
+     /*
+     * * * It deletes a file
+     */
      function delete_new_file (file) {
         fs.unlink("./Test/lib/" + file, function (error, data) { 
         });
      };
 
+     /*
+     * * * It deletes a full directory ./Test/dest/
+     */
     function delete_directory (path) {
       if( fs.existsSync(path) ) {
         fs.readdirSync(path).forEach(function(file,index) {
@@ -312,6 +323,9 @@
       }
     };
 
+    /*
+    * * * It deletes a file according to type
+    */
     function delete_file (file, type) {
         fs.unlink("./Test/dest/" + file, function (error, data) { 
           if (type === "js")
@@ -322,6 +336,9 @@
         });
     };
 
+     /*
+     * * * It manipulates newfile.ts changes data to changedData
+     */
      function change_file () {
         fs.readFile("./Test/lib/newfile.ts", 'utf8', function (error, data) {
           if (error) 
@@ -329,13 +346,12 @@
           
           var result = data.replace(/data/g, 'changedData');
 
-          fs.writeFile("./Test/lib/newfile.ts", result, 'utf8', function (err) {
-            if (err) 
-              return console.log(err);
+          fs.writeFile("./Test/lib/newfile.ts", result, 'utf8', function (error) {
+            if (error) 
+              return console.log(error);
           });
         });
      };
-
 
      /*
      * * * It should watch for ts changes
@@ -392,7 +408,7 @@
     };
 
     /*
-    * * * It should minify html file
+    * * * It should minify a html file
     */
     function test_minify (cmd, file, fileMin, num, type) {
       console.log(" ");
@@ -412,16 +428,14 @@
               console.log("Error: File doesn't exist.");
             } 
             bufferAfterMin = data.toString();
-        });
-        setTimeout(function () {
-          if (bufferBeforeMin === bufferAfterMin)
-            console.log("Error: There was an error minifying this file " + file);
-          else 
-            console.log("SUCESS: The file " + file + " has been successfully minifed.");
+            if (bufferBeforeMin === bufferAfterMin)
+              console.log("Error: There was an error minifying this file " + file);
+            else 
+              console.log("SUCESS: The file " + file + " has been successfully minifed.");
             if (num === "13") {
               test_minify_images();
             }
-        }, 500);
+        });
       });
     };
 
@@ -480,18 +494,50 @@
             if(bufferAfterMin.search(".run") !== -1) {
               console.log("The html template has been put in the cache.");
               console.log(" ");
-              console.log("'Gulp' and the NPM packages required to run the 'Gulp' tasks are perfectly installed on your system.");
-              console.log(" ");
-              console.log("You can run the Gulp tasks: gulp <task_name> or gulp env-development / gulp env-build");
-              console.log(" ");
-              console.log(" ");
-              console.log(" ");
-              delete_directory("./Test/dest");
-              setTimeout(function () {
-                exec("kill " + process.pid, function (err, data) { 
-              })}, 1000);
+              test_dependency_fixer();
             }
         });
       });
     };
+
+    /*
+    * * * It should inject angular dependecies 
+    */
+    function test_dependency_fixer () {
+      console.log(" ");
+      console.log("16- test_dependency_fixer");
+      console.log(" ");
+
+      var bufferBeforeMin, bufferAfterMin;
+      fs.readFile("./Test/lib/dependency-test.js", function (error, data) {
+          if (error !== null) {
+            console.log("Error: File doesn't exist.");
+          } 
+          bufferBeforeMin = data.toString();;
+      });
+      exec("gulp test-dependency-fixer", function (error, stdout, stderr) {
+        console.log(stdout);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+        fs.readFile("./Test/dest/dependency-test.js", function (error, data) {
+          bufferAfterMin = data.toString();
+          if (bufferAfterMin !== bufferBeforeMin) {
+            console.log("ngAnnotate has injected dependecies into ./Test/dest/dependency-test.js");
+            console.log(" ");
+            console.log("'Gulp' and the NPM packages required to run the 'Gulp' tasks are perfectly installed on your system.");
+            console.log(" ");
+            console.log("You can run the Gulp tasks: gulp <task_name> or gulp env-development / gulp env-build");
+            console.log(" ");
+            console.log(" ");
+            console.log(" ");
+            delete_directory("./Test/dest");
+            setTimeout(function () {
+              exec("kill " + process.pid, function (err, data) { 
+            })}, 500);
+          }
+        });
+      });
+    };
+
 }());
