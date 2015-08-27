@@ -22,7 +22,11 @@
 
 			dev: "./development/app/",
 
-			index: "./index.html"
+			index: "./index.html",
+
+			testDest: "./Test/dest/",
+
+			testLib: "./Test/lib/"
 		};
 		return config;
 	};
