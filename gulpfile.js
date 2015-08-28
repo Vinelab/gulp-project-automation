@@ -29,108 +29,88 @@ gulp.task("list-tasks", lazy.taskListing);
 * * * Compile Typescript to JavaScript 
 */
 gulp.task("ts-compiler", function () {
-    return gulp.src(config.allts)
-               .pipe(lazy.typescript({
-                // Generates corresponding .map file. 
-                sourceMap : false,
-                
-                // Generates corresponding .d.ts file. 
-                declaration : true,
- 
-                // Do not emit comments to output. 
-                removeComments : false,
- 
-                // Warn on expressions and declarations with an implied 'any' type. 
-                noImplicitAny : false,
- 
-                // Skip resolution and preprocessing. 
-                noResolve : false,
- 
-                // Specify module code generation: 'commonjs' or 'amd'   
-                module : "amd",
- 
-                // Specify ECMAScript target version: 'ES3' (default), or 'ES5' 
-                target : "ES5"
-              }))
-              .pipe(gulp.dest(config.dev));
+  tsCompiler(config.allts, config.dev);
 });
 /*
 * * * This task is used for testing. Compile a simple ts file to js
 */
 gulp.task("test-ts-compiler", function () {
-          return gulp.src("./Test/lib/*.ts")
-                       .pipe(lazy.typescript({
-                        // Generates corresponding .map file. 
-                        sourceMap : false,
-                
-                        // Generates corresponding .d.ts file. 
-                        declaration : true,
- 
-                        // Do not emit comments to output. 
-                        removeComments : false,
- 
-                        // Warn on expressions and declarations with an implied 'any' type. 
-                        noImplicitAny : false,
- 
-                        // Skip resolution and preprocessing. 
-                        noResolve : false,
- 
-                        // Specify module code generation: 'commonjs' or 'amd'   
-                        module : "amd",
- 
-                        // Specify ECMAScript target version: 'ES3' (default), or 'ES5' 
-                        target : "ES5"
-                      }))
-                      .pipe(gulp.dest(config.testDest));
+  tsCompiler(config.testLib + "*.ts", config.testDest);
 });
+
+function tsCompiler (src, dest) {
+  return gulp.src(src)
+             .pipe(lazy.typescript({
+              // Generates corresponding .map file. 
+              sourceMap : false,
+                
+              // Generates corresponding .d.ts file. 
+              declaration : true,
+ 
+              // Do not emit comments to output. 
+              removeComments : false,
+ 
+              // Warn on expressions and declarations with an implied 'any' type. 
+              noImplicitAny : false,
+ 
+              // Skip resolution and preprocessing. 
+              noResolve : false,
+ 
+              // Specify module code generation: 'commonjs' or 'amd'   
+              module : "amd",
+ 
+              // Specify ECMAScript target version: 'ES3' (default), or 'ES5' 
+              target : "ES5"
+            }))
+            .pipe(gulp.dest(dest));
+};
 
 
 /*
 * * * Less to Css conversion 
 */
 gulp.task("less-css", function () {
-    return gulp.src(config.allless)
-               .pipe(lazy.less())
-               .pipe(gulp.dest(config.dev + "_public/styles/css/"));
+  lessCss(config.allless, config.dev + "_public/styles/css/");
 });
 /*
 * * *This task is used for testing. Compile simple less file to css
 */
 gulp.task("test-less-css", function () {
-    return gulp.src(config.testLib + "*.less")
-               .pipe(lazy.less())
-               .pipe(gulp.dest(config.testDest));
+  lessCss(config.testLib + "*.less", config.testDest);
 });
+
+function lessCss (src, dest) {
+  return gulp.src(src)
+             .pipe(lazy.less())
+             .pipe(gulp.dest(dest));
+};
 
 
 /*
 * * * Concat all Css files in one file
 */
 gulp.task("concat-css", function () {
-    return gulp.src(config.allcss)
-               .pipe(lazy.concatCss("main.css"))
-               .pipe(gulp.dest(config.dev + "_public/styles/css/"));
+  concatCss(config.allcss, config.dev + "_public/styles/css/", "main.css");
 });
 /*
 * * *This task is used for testing. Concat css files
 */
 gulp.task("test-concat-css", function () {
-    return gulp.src([config.testDest + "test-style*.css", config.testDest + "newstyle.css"])
-               .pipe(lazy.concatCss("test-main.css"))
-               .pipe(gulp.dest(config.testDest + "dest/"));
+    concatCss([config.testDest + "test-style*.css", config.testDest + "newstyle.css"], config.testDest + "dest/", "test-main.css");
 });
+
+function concatCss (src, dest, name) {
+  return gulp.src(src)
+             .pipe(lazy.concatCss(name))
+             .pipe(gulp.dest(dest)); 
+};
 
 
 /*
 * * * Add browser prefixes to make the Css rules compatible across browsers in the main.css file
 */
 gulp.task("auto-prefixer", function () {
-    return gulp.src(config.dev + "_public/styles/css/main.css")
-               .pipe(lazy.autoprefixer({
-                  browsers: ["> 0%"],
-                  cascade: true
-               }))
-               .pipe(gulp.dest(config.dev + "_public/styles/css/"));
+  autoPrefixer(config.dev + "_public/styles/css/main.css", config.dev + "_public/styles/css/");
 });
 /*
 * * * This task is used for testing. Simply adds browser prefixes to the main css file test-main.css
@@ -141,62 +121,77 @@ gulp.task("test-auto-prefixer", function () {
                   browsers: ["> 0%"],
                   cascade: true
                }))
-               .pipe(gulp.dest(config.testDest + "dest/"));
+               .pipe(gulp.dest(config.testDest + "dest/")); autoPrefixer(config.testDest + "dest/test-main.css", config.testDest + "dest/");
 });
+
+function autoPrefixer (src, dest) {
+    return gulp.src(src)
+               .pipe(lazy.autoprefixer({
+                  browsers: ["> 0%"],
+                  cascade: true
+               }))
+               .pipe(gulp.dest(dest));
+};
 
 
 /*
 * * * Inject all Bower components into index.html 
 */
 gulp.task("bower-injector", function () {
-    return gulp.src(config.index)
-               .pipe(wiredep.stream())
-               .pipe(gulp.dest(""));
+  bowerInjector(config.index, "", "")
 });
 /*
 * * * This task is used for testing. Simply adds bower components into test-index.html
 */
 gulp.task("test-bower-injector", function () {
-    return gulp.src(config.index)
-               .pipe(wiredep.stream())
-               .pipe(lazy.rename({prefix: 'test-'}))
-               .pipe(gulp.dest(config.testDest + "dest/"));
+  bowerInjector(config.index, config.testDest + "dest/", "test")
 });
+
+function bowerInjector (src, dest, type) {
+    return gulp.src(src)
+               .pipe(wiredep.stream())
+               .pipe(lazy.if(type === "test", lazy.rename({prefix: 'test-'})))
+               .pipe(gulp.dest(dest)); 
+};
 
 
 /*
 * * * Inject all JavaScript files into index.html
 */
 gulp.task("js-injector", function () {                                    
-    return gulp.src(config.index)
-               .pipe(lazy.inject(gulp.src(config.alljs, {read: false})))
-               .pipe(gulp.dest(""));
+  jsInjector(config.index, config.alljs, "");
 });
 /*
 * * * This task is used for testing. Simply adds js scripts components into test-index.html
 */
 gulp.task("test-js-injector", function () {                                    
-    return gulp.src(config.testDest + "dest/test-index.html")
-               .pipe(lazy.inject(gulp.src(config.testDest + "*.js", {read: false})))
-               .pipe(gulp.dest(config.testDest + "dest/"));
+  jsInjector(config.testDest + "dest/test-index.html", config.testDest + "*.js", config.testDest + "dest/");
 });
+
+function jsInjector (src, path, dest) {
+    return gulp.src(src)
+               .pipe(lazy.inject(gulp.src(path, {read: false})))
+               .pipe(gulp.dest(dest)); 
+};
 
 /*
 * * * Inject all Css files into index.html
 */
 gulp.task("css-injector", function () {
-    return gulp.src(config.index)
-               .pipe(lazy.inject(gulp.src(config.dev + "_public/styles/css/main.css", {read: false})))
-               .pipe(gulp.dest(""));
+  cssInjector(config.index, config.dev + "_public/styles/css/main.css", "");
 });
 /*
 * * * This task is used for testing. Simply adds Css scripts components into test-index.html
 */
 gulp.task("test-css-injector", function () {
-    return gulp.src("./Test/dest/dest/test-index.html")
-               .pipe(lazy.inject(gulp.src(config.testDest + "dest/test-main.css", {read: false})))
-               .pipe(gulp.dest(config.testDest + "dest/"));
+  cssInjector("./Test/dest/dest/test-index.html", config.testDest + "dest/test-main.css", config.testDest + "dest/");
 });
+
+function cssInjector (src, path, dest) {
+    return gulp.src(src)
+               .pipe(lazy.inject(gulp.src(path, {read: false})))
+               .pipe(gulp.dest(dest)); 
+};
 
 /*
 * * * Move all HTML files to "development" destination
@@ -320,37 +315,41 @@ function startBrowserSync() {
 * * * Minify Html
 */
 gulp.task("minify-html", function () {
-    return gulp.src(config.allhtml)
-               .pipe(lazy.minifyHtml({conditionals: true, spare:true}))
-               .pipe(gulp.dest(config.build));
+  minifyHtml(config.allhtml, config.build, "");
 });
 /*
 * * * This task is used for testing. To check whether a simple html page has been minified or not
 */
 gulp.task("test-minify-html", function () {
+  minifyHtml(config.testLib + "test.html", config.testDest, "test")
+});
+
+function minifyHtml (src, dest, type) {
     return gulp.src(config.testLib + "test.html")
                .pipe(lazy.minifyHtml({conditionals: true, spare:true}))
-               .pipe(lazy.rename({suffix: ".min"}))
+               .pipe(lazy.if(type === "test", lazy.rename({suffix: ".min"})))
                .pipe(gulp.dest(config.testDest));
-});
+};
 
 
 /*
 * * * Compressing Images
 */
 gulp.task("images", function () {
-    return gulp.src(config.allimg)
-               .pipe(lazy.imagemin({optimizationLevel: 5}))
-               .pipe(gulp.dest(config.build + "_public/img"));
+  images(config.allimg, config.build + "_public/img");
 });
 /*
 * * * This tasks is used for testing. To check whether a simple image has been minified or not
 */
 gulp.task("test-images", function () {
-    return gulp.src(config.testLib + "img.jpg")
-               .pipe(lazy.imagemin({optimizationLevel: 5}))
-               .pipe(gulp.dest(config.testDest));
+  images(config.testLib + "img.jpg", config.testDest);
 });
+
+function images (src, dest) {
+    return gulp.src(src)
+               .pipe(lazy.imagemin({optimizationLevel: 5}))
+               .pipe(gulp.dest(dest)); 
+};
 
 
 
@@ -367,80 +366,84 @@ gulp.task("copy-fonts", function () {
 * * * Template cache
 */  
 gulp.task("template-cache", function () {
-    return gulp.src(config.allhtml)
-               .pipe(lazy.minifyHtml({empty: true}))
-               .pipe(lazy.angularTemplatecache())
-               .pipe(gulp.dest(config.build));
+  templateCache(config.allhtml, config.build);
 });
 /*
 * * * This task is used for testing.
 */
 gulp.task("test-template-cache", function () {
-    return gulp.src(config.testLib + "tmpl.html")
+  templateCache(config.testLib + "tmpl.html", config.testDest);
+});
+
+function templateCache (src, dest) {
+    return gulp.src(src)
                .pipe(lazy.minifyHtml({empty: true}))
                .pipe(lazy.angularTemplatecache())
-               .pipe(gulp.dest(config.testDest));
-});
+               .pipe(gulp.dest(dest));
+};
 
 
 /*
 * * * Minify Css
 */
 gulp.task("minify-css", function () {
-    return gulp.src(config.build + "main.css")
-               .pipe(lazy.minifyCss({keepBreaks: false}))
-               .pipe(lazy.rename({suffix: '.optimized.min'}))
-               .pipe(gulp.dest(config.build));
+  minifyCss(config.build + "main.css", ".optimized.min", config.build)
 });
 /*
 * * * This task is used for testing. To check whether a simple css file has been minified or not
 */
 gulp.task("test-minify-css", function () {
-    return gulp.src(config.testLib + "test.css")
-               .pipe(lazy.minifyCss({keepBreaks: false}))
-               .pipe(lazy.rename({suffix: ".min"}))
-               .pipe(gulp.dest(config.testDest));
+  minifyCss(config.testLib + "test.css", ".min", config.testDest);
 });
+
+function minifyCss (src, Suffix, dest) {
+    return gulp.src(src)
+               .pipe(lazy.minifyCss({keepBreaks: false}))
+               .pipe(lazy.rename({suffix: Suffix}))
+               .pipe(gulp.dest(dest));
+};
 
 
 /*
 * * * Minify JS
 */
 gulp.task("minify-js", function () {
-    return gulp.src(config.build + "build.js")
-               .pipe(lazy.stripDebug())
-               .pipe(lazy.uglify())
-               .pipe(lazy.rename({suffix: '.optimized.min'}))
-               .pipe(gulp.dest(config.build));
+  minifyJs(config.build + "build.js", ".optimized.min", config.build);
 });
 /*
 * * * This task is used for testing. To check whether a simple css file has been minified or not
 */
 gulp.task("test-minify-js", function () {
-    return gulp.src(config.testLib + "test.js")
+  minifyJs(config.testLib + "test.js", ".min", config.testDest);
+});
+
+function minifyJs (src, Suffix, dest) {
+    return gulp.src(src)
                .pipe(lazy.stripDebug())
                .pipe(lazy.uglify())
-               .pipe(lazy.rename({suffix: ".min"}))
-               .pipe(gulp.dest(config.testDest));
-});
+               .pipe(lazy.rename({suffix: Suffix}))
+               .pipe(gulp.dest(dest));
+};
 
 
 /*
 * * * Fix angular's dependecie's names 
 */
 gulp.task("dependency-fixer", function () {
-  return gulp.src(config.alljs)
-             .pipe(lazy.ngAnnotate()) 
-             .pipe(gulp.dest(config.dev));
+  dependencyFixer(config.alljs, config.dev);
 });
 /*
 * * * This task is used for testing. It should inject angular dependecies 
 */
 gulp.task("test-dependency-fixer", function () {
-  return gulp.src(config.testLib + "dependency-test.js")
-             .pipe(lazy.ngAnnotate()) 
-             .pipe(gulp.dest(config.testDest));
+  dependencyFixer(config.testLib + "dependency-test.js", config.testDest);
 });
+
+function dependencyFixer (src, dest) {
+  return gulp.src(src)
+             .pipe(lazy.ngAnnotate()) 
+             .pipe(gulp.dest(dest));
+};
 
 
 /*
