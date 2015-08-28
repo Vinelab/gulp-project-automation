@@ -189,7 +189,7 @@
                 else {
                   console.log("SUCESS: File has been read successfully.");
                   var buffer = data.toString();
-                  console.log('<script src="/test/dest/' + file + '"></script>');
+                  console.log('<script src="/Test/dest/' + file + '"></script>');
                   if (buffer.search('<script src="/test/dest/' + file + '"></script>') !== -1) {
                     console.log("SUCESS: The script with src pointing to " + file + " has been successfully added to test-index.html");
                     if (file.search("newfile") === -1)
@@ -233,7 +233,7 @@
                 } else {
                   console.log("SUCESS: File has been read successfully.");
                   var buffer = data.toString();
-                  if (buffer.search('<link rel="stylesheet" href="/Test/dest/dest/test-main.css">') !== -1) {
+                  if (buffer.search('<link rel="stylesheet" href="/test/dest/dest/test-main.css">') !== -1) {
                     console.log("SUCESS: The stylesheet with href pointing to test-main.css has been successfully added to test-index.html");
                     if (type === "normal") {
                       test_ts_watcher();
