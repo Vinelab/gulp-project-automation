@@ -20,7 +20,7 @@
       
   For testing, run
 
-      node ./Test/TEST.js 
+      node ./test/gulpTest.js 
     
     
 # About this Gulp
@@ -81,7 +81,7 @@
 
   test
 
-    TEST.js
+    gulpTest.js
 
     lib
     
@@ -94,6 +94,8 @@
   MainCtrl.ts
   
   Index.html
+
+  gulp-test.js
   
   gulpFile.js
   
