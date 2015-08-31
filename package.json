@@ -6,7 +6,7 @@
   "description": "Automate project tasks using Gulp",
   "private": true,
   "license": "BSD",
-  "main": "./gulpFile.js",
+  "main": "./gulpfile.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:Vinelab/gulp-project-automation.git"
@@ -17,7 +17,7 @@
   "scripts": {
     "install": "npm install gulp",
     "installG": "npm install gulp -g",
-    "test": "node ./Test/TEST.js"
+    "test": "node ./test/gulpTest.js"
   },
   "devDependencies": {
     "require-dir": "^1.0.0",
