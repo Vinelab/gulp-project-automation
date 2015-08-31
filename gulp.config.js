@@ -24,9 +24,9 @@
 
 			index: "./index.html",
 
-			testDest: "./Test/dest/",
+			testDest: "./test/dest/",
 
-			testLib: "./Test/lib/"
+			testLib: "./test/lib/"
 		};
 		return config;
 	};
