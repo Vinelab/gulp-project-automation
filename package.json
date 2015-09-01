@@ -20,7 +20,7 @@
     "test": "node ./test/gulpTest.js"
   },
   "devDependencies": {
-    "require-dir": "^1.0.0",
+    "require-dir": "0.3.0",
     "browser-sync": "^2.8.2",
     "browserify": "^11.0.1",
     "del": "~1.2.0",
