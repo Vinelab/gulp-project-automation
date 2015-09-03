@@ -5,7 +5,6 @@
 (function () {
 
   'use strict';
-
   var browserSync = require("browser-sync");
   var clean = require("del");
   var config = require("./gulp.config.js")();
@@ -350,7 +349,7 @@ function useRefBuild () {
       .pipe(lazy.useref())
       .pipe(gulp.dest("./build"))
       .on("end", function () {
-          runSequence("minify-js", "minify-css", "dependency-fixer", function () {
+          runSequence("minify-js", "minify-css", function () {
             clean([config.build + "main.css", config.build + "build.js", config.build + "templates.js"], rename);
           });
       });
@@ -409,5 +408,6 @@ gulp.task("env-development", function () {
 gulp.task("env-build", ["minify-html", 
                         "images", 
                         "copy-fonts", 
-                        "template-cache"], useRefBuild);
+                        "template-cache",
+                        "dependency-fixer"], useRefBuild);
 }());
