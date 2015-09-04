@@ -145,7 +145,7 @@ gulp.task("copy-html", function () {
 * * * also deleted from index.html
 */ 
 gulp.task("ts-watcher", function () {
-    lazy.watch(["./app/**/", "!./app/**/*.html" ,"!./app/**/**/**/*.less", "!./app/**/**/**/*.css"])
+    lazy.watch(["./app/**/", "!./app/**/*.html" ,"!./app/**/**/**/*.less", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
         .on("add", function (path) {  
           console.log("New file has been added " + path);
           runSequence("ts-compiler", "js-injector"); 
@@ -160,9 +160,10 @@ gulp.task("ts-watcher", function () {
             var suffix = path.substring(path.length - 3);
             var jsPath = filePath.replace(".ts", ".js").replace("/app", "/development/app");
             console.log("File has been deleted " + filePath);
-            clean(jsPath, function () {
-              gulp.start("js-injector");
-            });
+            clean(jsPath);
+            setTimeout(function() { 
+              gulp.start("js-injector"); 
+            }, 1000);
         });
 });
 
@@ -173,7 +174,7 @@ gulp.task("ts-watcher", function () {
 * * * will be also deleted from index.html
 */ 
 gulp.task("less-watcher", function () {
-    lazy.watch(["./app/**/", "!./app/*.ts", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css"])
+    lazy.watch(["./app/**/", "!./app/*.ts", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
         .on("add", function (path) {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
@@ -183,9 +184,10 @@ gulp.task("less-watcher", function () {
         })
         .on("change", function (path) {
             console.log("File has been changed " + path);
-            clean(config.dev + "_public/styles/css/main.css", function () {
+            clean(config.dev + "_public/styles/css/main.css");
+            setTimeout(function () {
               runSequence("less-css", "concat-css", "auto-prefixer");
-            });
+            }, 1000);
         })
         .on("unlink", function (path) {
             var index = path.indexOf(config.client);
@@ -193,9 +195,10 @@ gulp.task("less-watcher", function () {
             var suffix = path.substring(path.lastIndexOf("."));
             var cssPath = filePath.replace("less", "css").replace(".less", ".css").replace("/app", "/development/app");
             console.log("File has been deleted " + filePath);
-            clean(cssPath, function () {
+            clean(cssPath);
+            setTimeout(function () {
               gulp.start("css-injector");
-            });
+            }, 1000);
         });
 });
 
@@ -350,7 +353,8 @@ function useRefBuild () {
       .pipe(gulp.dest("./build"))
       .on("end", function () {
           runSequence("minify-js", "minify-css", function () {
-            clean([config.build + "main.css", config.build + "build.js", config.build + "templates.js"], rename);
+            clean([config.build + "main.css", config.build + "build.js", config.build + "templates.js"]);
+            setTimeout(rename, 1000);
           });
       });
 }
@@ -375,6 +379,15 @@ function rename() {
       });
 }
 
+/*
+* * *
+*/
+function clean (path) {
+    gulp.src(path, {read: false})
+        .pipe(lazy.clean()).on("end", function () {
+          console.log("Done Cleaning...");
+        });
+}
 
 
 
