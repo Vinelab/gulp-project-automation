@@ -6,7 +6,6 @@
 
   'use strict';
   var browserSync = require("browser-sync");
-  var clean = require("del");
   var config = require("./gulp.config.js")();
   var gulp = require("gulp");
   var lazy = require("gulp-load-plugins")({lazy: true});
@@ -138,6 +137,11 @@ gulp.task("copy-html", function () {
                .pipe(gulp.dest(config.dev));
 });
 
+function copyHtml (file, dest) {
+  gulp.src(file)
+      .pipe(gulp.dest(dest));
+};
+
 
 /*
 * * *  Watch for newly added Typescript files, compile them, and then added their Js files into index.html. 
@@ -199,6 +203,41 @@ gulp.task("less-watcher", function () {
             setTimeout(function () {
               gulp.start("css-injector");
             }, 1000);
+        });
+});
+
+/*
+* * *
+*/
+gulp.task("html-watcher", function () {
+    lazy.watch(["./app/**/", "!./app/*.ts", "!./app/**/*.ts", "!./app/**/**/**/*.css", "!./app/**/**/**/*.less", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
+        .on("add", function (path) {
+          var index = path.indexOf("/app");
+          var filePath = path.substr(index);
+          var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
+          console.log("New file has been added " + filePath);
+          copyHtml("." + filePath, devFile);
+        })
+        .on("change", function (path) {
+          var index = path.indexOf("/app");
+          var filePath = path.substr(index );
+          var devPath = filePath.replace("/app", "/development/app");
+          var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
+          console.log("File has been changed " + filePath);
+          console.log("Should clean " + devPath);
+          clean("." + devPath);
+          setTimeout(function () {
+            copyHtml("." + filePath, devFile);
+          }, 1000);
+
+        })
+        .on("unlink", function (path) {
+          var index = path.indexOf("/app");
+          var filePath = path.substr(index);
+          var devPath = filePath.replace("/app", "/development/app");
+          var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
+          console.log("File has been deleted " + filePath);
+          clean("." + devPath);
         });
 });
 
@@ -411,6 +450,7 @@ gulp.task("env-development", function () {
                 "copy-html",
                 "ts-watcher", 
                 "less-watcher",
+                "html-watcher",
                 "browser-sync");
 });
 
