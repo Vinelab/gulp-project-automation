@@ -65,8 +65,9 @@ gulp.task("Test-ts-compiler", ["test-ts-compiler"]);
 */
 gulp.task("less-css", function () {
     return gulp.src(config.allless)
+               .pipe(lazy.insert.prepend("@import './app/_public/styles/less/config.less';"))
                .pipe(lazy.less())
-               .pipe(gulp.dest(config.dev + "_public/styles/css/"));
+               .pipe(gulp.dest(config.client + "_public/styles/css/"));
 });
 gulp.task("Test-less-css", ["test-less-css"]);
 
@@ -75,8 +76,9 @@ gulp.task("Test-less-css", ["test-less-css"]);
 * * * Concat all Css files in one file
 */
 gulp.task("concat-css", function () {
-    return gulp.src(config.allcss)
-               .pipe(lazy.concatCss("main.css"))
+    return gulp.src(config.client + "_public/styles/css/*.css")
+               .pipe(lazy.concat("main.css"))
+               //.pipe(lazy.insert.prepend("@import './app/_public/styles/less/config.less';"))
                .pipe(gulp.dest(config.dev + "_public/styles/css/"));
 });
 gulp.task("Test-concat-css", ["test-concat-css"]);
@@ -149,7 +151,7 @@ function copyHtml (file, dest) {
 * * * also deleted from index.html
 */ 
 gulp.task("ts-watcher", function () {
-    lazy.watch(["./app/**/", "!./app/**/*.html" ,"!./app/**/**/**/*.less", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
+    lazy.watch(["./app/*.ts", "./app/**/*.ts", "!./app/**/*.html" ,"!./app/**/**/**/*.less", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
         .on("add", function (path) {  
           console.log("New file has been added " + path);
           runSequence("ts-compiler", "js-injector"); 
@@ -178,7 +180,7 @@ gulp.task("ts-watcher", function () {
 * * * will be also deleted from index.html
 */ 
 gulp.task("less-watcher", function () {
-    lazy.watch(["./app/**/", "!./app/*.ts", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
+    lazy.watch(["./app/**/**/**/*.less", "!./app/*.ts", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
         .on("add", function (path) {
             var index = path.indexOf(config.client);
             var filePath = path.substring(index);
