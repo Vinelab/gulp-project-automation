@@ -161,39 +161,14 @@ gulp.task("ts-watcher", function () {
 
 
 /*
-* * * Watch for newly added Less files, compile them, and then added their Css files into index.html.
-* * * If a file has been deleted, its corresponding Css will be deleted and its following stylesheet
-* * * will be also deleted from index.html
+  less watcher
 */
 gulp.task("less-watcher", function () {
-    lazy.watch(["./app/**/**/**/*.less", "!./app/*.ts", "!./app/**/*.html", "!./app/**/*.ts", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
-        .on("add", function (path) {
-            var index = path.indexOf(config.client);
-            var filePath = path.substring(index);
-            var suffix = path.substring(path.lastIndexOf("."));
-            console.log("New file has been added " + path);
-            runSequence("less-css", "concat-css", "auto-prefixer", "css-injector");
-        })
+    lazy.watch([config.lessPath])
         .on("change", function (path) {
-            console.log("File has been changed " + path);
-            clean(config.dev + "_public/styles/css/main.css");
-            setTimeout(function () {
-              runSequence("less-css", "concat-css", "auto-prefixer");
-            }, 1000);
-        })
-        .on("unlink", function (path) {
-            var index = path.indexOf(config.client);
-            var filePath = path.substring(index);
-            var suffix = path.substring(path.lastIndexOf("."));
-            var cssPath = filePath.replace("less", "css").replace(".less", ".css").replace("/app", "/development/app");
-            console.log("File has been deleted " + filePath);
-            clean(cssPath);
-            setTimeout(function () {
-              gulp.start("css-injector");
-            }, 1000);
+           runSequence("less-css", "auto-prefixer");
         });
 });
-
 /*
 * * *
 */
