@@ -2,19 +2,20 @@
 	module.exports = function () {
 		var app = "./app/";
 		var config = {
-			allcss: "./development/app/_public/styles/css/*.css",
 
-			allfonts: app + "_public/styles/fonts/*.*",
+			lessPath: app + "_public/styles/less/*.less",
+			cssPath: "./development/app/_public/styles/css/*.css",
 
-			allhtml: app + "**/*.html",
+			fontsPath: app + "_public/styles/fonts/*.*",
 
-			allimg: app + "_public/img/*.*",
+			htmlPath: app + "**/*.html",
 
-			alljs: ["./development/app/app.module.js", "./development/app/app.*.js", "./development/app/**/*.js"],
+			imgagesPath: app + "_public/images/*.*",
 
-			allless: app + "_public/styles/less/*.less",
 
-			allts: [app + "app.*.ts", app + "**/*.ts"],
+			tspath: app + "**/*.ts",
+
+			jsPath: ["./development/app/*.module.js", "./development/app/app.*.js", "./development/app/**/*.js"],
 
 			build: "./build/app/",
 
