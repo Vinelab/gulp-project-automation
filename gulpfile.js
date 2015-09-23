@@ -149,10 +149,8 @@ gulp.task("ts-watcher", function () {
             gulp.start("ts-compiler");
         })
         .on("unlink", function (path) {
-            var index = path.indexOf(config.client);
-            var filePath = path.substring(index);
-            var suffix = path.substring(path.length - 3);
-            var jsPath = filePath.replace(".ts", ".js").replace("/app", "/development/app");
+
+            var jsPath = path.replace(".ts", ".js").replace("/app", "/development/app");
             console.log("File has been deleted " + filePath);
             clean(jsPath);
             setTimeout(function() {
