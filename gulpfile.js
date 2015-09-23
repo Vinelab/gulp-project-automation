@@ -61,27 +61,15 @@ gulp.task("Test-ts-compiler", ["test-ts-compiler"]);
 
 
 /*
-* * * Less to Css conversion
+* * * Concat all Less files and then compile to css
 */
 gulp.task("less-css", function () {
-    return gulp.src(config.lessPath)
-               .pipe(lazy.insert.prepend("@import './app/_public/styles/less/config.less';"))
+    return gulp.src(["./app/_public/styles/less/config.less", config.lessPath])
+               .pipe(lazy.concat("main.less"))
                .pipe(lazy.less())
                .pipe(gulp.dest(config.client + "_public/styles/css/"));
 });
 gulp.task("Test-less-css", ["test-less-css"]);
-
-
-/*
-* * * Concat all Css files in one file
-*/
-gulp.task("concat-css", function () {
-    return gulp.src(config.client + "_public/styles/css/*.css")
-               .pipe(lazy.concat("main.css"))
-               //.pipe(lazy.insert.prepend("@import './app/_public/styles/less/config.less';"))
-               .pipe(gulp.dest(config.dev + "_public/styles/css/"));
-});
-gulp.task("Test-concat-css", ["test-concat-css"]);
 
 
 /*
