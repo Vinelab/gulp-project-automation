@@ -59,6 +59,16 @@ gulp.task("ts-compiler", function () {
 });
 gulp.task("Test-ts-compiler", ["test-ts-compiler"]);
 
+/*
+* * * Inject all JavaScript files into index.html
+*/
+gulp.task("js-injector", function () {
+    return gulp.src(config.index)
+               .pipe(lazy.inject(gulp.src(config.jsPath, {read: false})))
+               .pipe(gulp.dest(""));
+});
+gulp.task("Test-js-injector", ["test-js-injector"]);
+
 
 /*
 * * * Concat all Less files and then compile to css
@@ -87,28 +97,6 @@ gulp.task("Test-auto-prefixer", ["test-auto-prefixer"]);
 
 
 /*
-* * * Inject all Bower components into index.html
-*/
-gulp.task("bower-injector", function () {
-    return gulp.src(config.index)
-               .pipe(wiredep.stream())
-               .pipe(gulp.dest(""));
-});
-gulp.task("Test-bower-injector", ["test-bower-injector"]);
-
-
-/*
-* * * Inject all JavaScript files into index.html
-*/
-gulp.task("js-injector", function () {
-    return gulp.src(config.index)
-               .pipe(lazy.inject(gulp.src(config.jsPath, {read: false})))
-               .pipe(gulp.dest(""));
-});
-gulp.task("Test-js-injector", ["test-js-injector"]);
-
-
-/*
 * * * Inject all Css files into index.html
 */
 gulp.task("css-injector", function () {
@@ -117,6 +105,17 @@ gulp.task("css-injector", function () {
                .pipe(gulp.dest(""));
 });
 gulp.task("Test-css-injector", ["test-css-injector"])
+
+
+/*
+* * * Inject all Bower components into index.html
+*/
+gulp.task("bower-injector", function () {
+    return gulp.src(config.index)
+               .pipe(wiredep.stream())
+               .pipe(gulp.dest(""));
+});
+gulp.task("Test-bower-injector", ["test-bower-injector"]);
 
 
 /*
