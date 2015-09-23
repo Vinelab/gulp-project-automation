@@ -139,7 +139,7 @@ function copyHtml (file, dest) {
 * * * also deleted from index.html
 */
 gulp.task("ts-watcher", function () {
-    lazy.watch(["./app/*.ts", "./app/**/*.ts", "!./app/**/*.html" ,"!./app/**/**/**/*.less", "!./app/**/**/**/*.css", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
+    lazy.watch([config.tsPath])
         .on("add", function (path) {
           console.log("New file has been added " + path);
           runSequence("ts-compiler", "js-injector");
