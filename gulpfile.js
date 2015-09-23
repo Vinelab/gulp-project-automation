@@ -150,7 +150,7 @@ gulp.task("ts-watcher", function () {
         .on("unlink", function (path) {
 
             var jsPath = path.replace(".ts", ".js").replace("/app", "/development/app");
-            console.log("File has been deleted " + filePath);
+            console.log("File has been deleted " + jsPath);
             clean(jsPath);
             setTimeout(function() {
               gulp.start("js-injector");
