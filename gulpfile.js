@@ -245,11 +245,13 @@ function startBrowserSync() {
   browserSync(options);
 }
 
-
-
-
-
-
+/*
+* * * Fire the main task to create the "development" environment.
+*/
+gulp.task("env-development", function () {
+  runSequence("ts-compiler", "js-injector", "bower-injector", "copy-html", "ts-watcher", "html-watcher", "browser-sync");
+  runSequence("less-css", "auto-prefixer", "css-injector", "less-watcher");
+});
 
   /*                                  */
  /* * *     Build Environment    * * */
@@ -392,30 +394,6 @@ function clean (path) {
 }
 
 
-
-
-
-  /*                                 */
- /* * *      Two Main Tasks     * * */
-/*                                 */
-
-/*
-* * * Fire the main task to create the "development" environment.
-*/
-gulp.task("env-development", function () {
-    runSequence("ts-compiler",
-                "less-css",
-                "concat-css",
-                "auto-prefixer",
-                "bower-injector",
-                "js-injector",
-                "css-injector",
-                "copy-html",
-                "ts-watcher",
-                "less-watcher",
-                "html-watcher",
-                "browser-sync");
-});
 
 
 /*
