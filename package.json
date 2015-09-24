@@ -1,6 +1,6 @@
 {
   "name": "gulp-project-automation",
-  "preferGlobal": true,
+  "preferGlobal": false,
   "version": "0.0.1",
   "author": "Mohammad K. Sidani <moe.sidani@vinelab.com>",
   "description": "Automate project tasks using Gulp",
