@@ -3,6 +3,8 @@ bower_components/
 node_modules/
 build/
 development/
+staging/
+production/
 components/
 
 
