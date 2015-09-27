@@ -61,7 +61,7 @@ gulp.task("Test-ts-compiler", ["test-ts-compiler"]);
 /*
 * * * Inject all JavaScript files into index.html
 */
-gulp.task("js-injector", function () {
+gulp.task("js-injector",['ts-compiler', 'app-config'], function () {
     return gulp.src(config.index)
                .pipe(lazy.inject(gulp.src(config.jsPath, {read: false})))
                .pipe(gulp.dest(""));
@@ -98,7 +98,7 @@ gulp.task("Test-auto-prefixer", ["test-auto-prefixer"]);
 /*
 * * * Inject all Css files into index.html
 */
-gulp.task("css-injector", function () {
+gulp.task("css-injector", ['auto-prefixer'], function () {
     return gulp.src(config.index)
                .pipe(lazy.inject(gulp.src(config.environment + "/_public/styles/main.css", {read: false})))
                .pipe(gulp.dest(""));
@@ -246,9 +246,15 @@ function startBrowserSync() {
 /*
 * * * Fire the main task to create the "development" environment.
 */
-gulp.task("env-development", function () {
-  runSequence("ts-compiler", "js-injector", "bower-injector", "copy-html", "ts-watcher", "html-watcher", "browser-sync");
-  runSequence("less-css", "auto-prefixer", "css-injector", "less-watcher");
+gulp.task("start", function () {
+  runSequence("js-injector",
+              "css-injector",
+              "bower-injector",
+              "copy-html",
+              "less-watcher",
+              "ts-watcher",
+              "html-watcher",
+              "browser-sync");
 });
 
   /*                                  */
