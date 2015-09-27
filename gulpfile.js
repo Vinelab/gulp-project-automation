@@ -11,8 +11,7 @@
   var lazy = require("gulp-load-plugins")({lazy: true});
   var runSequence = require("run-sequence"); /* Exceptionally used to run tasks in a sequence - not in parallel */
   var wiredep = require("wiredep");
-  var requireDir = require('require-dir');
-  requireDir('./');
+
 
 /*
 * * * Tasks defined as Test-...-... trigger test tasks written inside gulp-test.js
