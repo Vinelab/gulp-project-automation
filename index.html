@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html ng-app="demoApp">
+<html ng-app="appName">
 <head>
-    <title>My App</title>
+    <title>My Test App</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
 
     <!-- build:css /lib.css-->
     <!-- bower:css -->
-
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:css /app/main.css-->
     <!-- inject:css -->
+
+    <link rel="stylesheet" href="/development/_public/styles/main.css">
 
     <!-- endinject -->
     <!-- endbuild -->
@@ -24,13 +25,23 @@
    </div>
     <!-- build:js /lib.js-->
     <!-- bower:js -->
-
+    <script src="components/jquery/dist/jquery.js"></script>
+    <script src="components/angular/angular.js"></script>
+    <script src="components/angular-route/angular-route.js"></script>
+    <script src="components/angular-animate/angular-animate.js"></script>
+    <script src="components/angular-resource/angular-resource.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
 
     <!-- build:js /app/build.js-->
     <!-- inject:js -->
+
+    <script src="/development/app.module.js"></script>
+
+    <script src="/development/app.config.js"></script>
+
+    <script src="/development/section/sectionController.js"></script>
 
     <!-- endinject -->
     <!-- inject:templates:js -->
