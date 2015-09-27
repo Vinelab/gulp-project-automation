@@ -1,34 +1,37 @@
 (function() {
 	module.exports = function () {
-		var app = "./app/";
-		var config = {
 
-			lessPath: app + "_public/styles/less/*.less",
-			cssPath: "./development/app/_public/styles/css/*.css",
+	  var GlobalConfig = {
+	    env: process.env.NODE_ENV,
+	    key: undefined,
+	    secret: undefined,
+	    appName: 'appName',
+	    appPath: 'app/',
+	    // configuration used in the app depending on the development environment
+	    inAppConfig: require('./config/' + process.env.NODE_ENV + '.json')
+	  };
 
-			fontsPath: app + "_public/styles/fonts/*.*",
+		return {
 
-			htmlPath: app + "**/*.html",
+			inAppConfig: GlobalConfig.inAppConfig,
+			appName: GlobalConfig.appName,
 
-			imgagesPath: app + "_public/images/*.*",
+			environment: GlobalConfig.env,
+			appPath: GlobalConfig.appPath,
 
+			lessPath: GlobalConfig.appPath + "_public/styles/less/*.less",
+			cssPath:  GlobalConfig.env + "/_public/styles/*.css",
 
-			tspath: app + "**/*.ts",
+			fontsPath: GlobalConfig.appPath + "_public/styles/fonts/*.*",
+			htmlPath: GlobalConfig.appPath + "**/*.html",
+			imgagesPath: GlobalConfig.appPath + "_public/images/*.*",
 
-			jsPath: ["./development/app/*.module.js", "./development/app/app.*.js", "./development/app/**/*.js"],
+			tsPath: GlobalConfig.appPath + "**/*.ts",
+			jsPath: [ GlobalConfig.env + "/*.module.js", GlobalConfig.env + "/app.*.js", GlobalConfig.env + "/**/*.js"],
 
-			build: "./build/app/",
+			index: "index.html",
 
-			client: app,
-
-			dev: "./development/app/",
-
-			index: "./index.html",
-
-			testDest: "./test/dest/",
-
-			testLib: "./test/lib/"
 		};
-		return config;
+
 	};
 }());

@@ -54,7 +54,7 @@ gulp.task("ts-compiler", function () {
                 // Specify ECMAScript target version: 'ES3' (default), or 'ES5'
                 target : "ES5"
               }))
-              .pipe(gulp.dest(config.dev));
+              .pipe(gulp.dest(config.environment));
 });
 gulp.task("Test-ts-compiler", ["test-ts-compiler"]);
 
@@ -73,10 +73,10 @@ gulp.task("Test-js-injector", ["test-js-injector"]);
 * * * Concat all Less files and then compile to css
 */
 gulp.task("less-css", function () {
-    return gulp.src(["./app/_public/styles/less/config.less", config.lessPath])
+    return gulp.src(["./app/_public/styles/less/variables.less", config.lessPath])
                .pipe(lazy.concat("main.less"))
                .pipe(lazy.less())
-               .pipe(gulp.dest(config.client + "_public/styles/css/"));
+               .pipe(gulp.dest(config.environment + "/_public/styles/"));
 });
 gulp.task("Test-less-css", ["test-less-css"]);
 
@@ -84,13 +84,13 @@ gulp.task("Test-less-css", ["test-less-css"]);
 /*
 * * * Add browser prefixes to make the Css rules compatible across browsers in the main.css file
 */
-gulp.task("auto-prefixer", function () {
-    return gulp.src(config.dev + "_public/styles/css/main.css")
+gulp.task("auto-prefixer", ['less-css'], function () {
+    return gulp.src(config.environment + "/_public/styles/main.css")
                .pipe(lazy.autoprefixer({
                   browsers: ["> 0%"],
                   cascade: true
                }))
-               .pipe(gulp.dest(config.dev + "_public/styles/css/"));
+               .pipe(gulp.dest(config.environment + "/_public/styles/"));
 });
 gulp.task("Test-auto-prefixer", ["test-auto-prefixer"]);
 
@@ -100,7 +100,7 @@ gulp.task("Test-auto-prefixer", ["test-auto-prefixer"]);
 */
 gulp.task("css-injector", function () {
     return gulp.src(config.index)
-               .pipe(lazy.inject(gulp.src(config.dev + "_public/styles/css/main.css", {read: false})))
+               .pipe(lazy.inject(gulp.src(config.environment + "/_public/styles/main.css", {read: false})))
                .pipe(gulp.dest(""));
 });
 gulp.task("Test-css-injector", ["test-css-injector"])
@@ -122,7 +122,7 @@ gulp.task("Test-bower-injector", ["test-bower-injector"]);
 */
 gulp.task("copy-html", function () {
     return gulp.src(config.htmlPath)
-               .pipe(gulp.dest(config.dev));
+               .pipe(gulp.dest(config.environment));
 });
 
 function copyHtml (file, dest) {
@@ -148,7 +148,7 @@ gulp.task("ts-watcher", function () {
         })
         .on("unlink", function (path) {
 
-            var jsPath = path.replace(".ts", ".js").replace("/app", "/development/app");
+            var jsPath = path.replace(".ts", ".js").replace("/app", "/development");
             console.log("File has been deleted " + jsPath);
             clean(jsPath);
             setTimeout(function() {
@@ -182,7 +182,7 @@ gulp.task("html-watcher", function () {
         .on("change", function (path) {
           var index = path.indexOf("/app");
           var filePath = path.substr(index );
-          var devPath = filePath.replace("/app", "/development/app");
+          var devPath = filePath.replace("/app", "/development");
           var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
           console.log("File has been changed " + filePath);
           console.log("Should clean " + devPath);
@@ -195,7 +195,7 @@ gulp.task("html-watcher", function () {
         .on("unlink", function (path) {
           var index = path.indexOf("/app");
           var filePath = path.substr(index);
-          var devPath = filePath.replace("/app", "/development/app");
+          var devPath = filePath.replace("/app", "/development");
           var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
           console.log("File has been deleted " + filePath);
           clean("." + devPath);
@@ -216,7 +216,7 @@ function startBrowserSync() {
   var options = {
       proxy: "localhost:" + 9090,
       port: 9090,
-      files: ["!./app/_public/styles/less/*.less", "./app/**/*.*"],
+      files: ["!" + config.lessPath, config.appPath + "/**/*.*"],
       ghostMode: {
         clicks: true,
         location: true,
@@ -335,7 +335,7 @@ gulp.task("Test-minify-js", ["test-minify-js"]);
 gulp.task("dependency-fixer", function () {
   return gulp.src(config.jsPath)
              .pipe(lazy.ngAnnotate())
-             .pipe(gulp.dest(config.dev));
+             .pipe(gulp.dest(config.environment));
 });
 gulp.task("Test-dependency-fixer", ["test-dependency-fixer"]);
 
