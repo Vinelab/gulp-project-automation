@@ -27,6 +27,17 @@
 gulp.task("list-tasks", lazy.taskListing);
 
 
+
+gulp.task("app-config",function(){
+  gulp.src('')
+      .pipe(lazy.ngConstant({
+        name: config.appName,
+        constants: config.inAppConfig
+      }))
+      .pipe(lazy.rename('app.config.js'))
+      .pipe(gulp.dest(config.environment));
+});
+
 /*
 * * * Compile Typescript to JavaScript
 */
@@ -214,7 +225,7 @@ gulp.task("browser-sync", startBrowserSync);
 */
 function startBrowserSync() {
   var options = {
-      proxy: "localhost:" + 9090,
+      proxy: "0.0.0.0:9090",
       port: 9090,
       files: ["!" + config.lessPath, config.appPath + "/**/*.*"],
       ghostMode: {
@@ -229,7 +240,7 @@ function startBrowserSync() {
       logPrefix: "gulp-patterns",
       notify: true,
       reloadDelay: 0,
-      browser: "safari"
+      browser: "google chrome"
   };
 
   if (browserSync.active) {
