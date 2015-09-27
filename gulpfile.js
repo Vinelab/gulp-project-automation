@@ -225,7 +225,9 @@ gulp.task("browser-sync", startBrowserSync);
 */
 function startBrowserSync() {
   var options = {
-      proxy: "0.0.0.0:9090",
+      server: {
+        baseDir: "./"
+      },
       port: 9090,
       files: ["!" + config.lessPath, config.appPath + "/**/*.*"],
       ghostMode: {
