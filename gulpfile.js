@@ -27,8 +27,6 @@
 */
 gulp.task("list-tasks", lazy.taskListing);
 
-
-
 gulp.task("app-config",function(){
   gulp.src('')
       .pipe(lazy.ngConstant({
@@ -137,11 +135,6 @@ gulp.task("copy-html", function () {
                .pipe(gulp.dest(config.environment));
 });
 
-function copyHtml (file, dest) {
-  gulp.src(file)
-      .pipe(gulp.dest(dest));
-};
-
 
 /*
 * * *  Watch for newly added Typescript files, compile them, and then added their Js files into index.html.
@@ -149,10 +142,10 @@ function copyHtml (file, dest) {
 * * * also deleted from index.html
 */
 gulp.task("ts-watcher", function () {
-    lazy.watch([config.tsPath])
+    lazy.watch(config.tsPath)
         .on("add", function (path) {
           console.log("New file has been added " + path);
-          runSequence("ts-compiler", "js-injector");
+          runSequence("js-injector");
         })
         .on("change", function (path) {
             console.log("File has been changed " + path);
@@ -161,8 +154,7 @@ gulp.task("ts-watcher", function () {
         .on("unlink", function (path) {
 
             var jsPath = path.replace(".ts", ".js").replace("/app", "/development");
-            console.log("File has been deleted " + jsPath);
-            clean(jsPath);
+            deleteFiles(jsPath);
             setTimeout(function() {
               gulp.start("js-injector");
             }, 1000);
@@ -179,6 +171,7 @@ gulp.task("less-watcher", function () {
            runSequence("less-css", "auto-prefixer");
         });
 });
+
 /*
 * * *
 */
@@ -196,12 +189,8 @@ gulp.task("html-watcher", function () {
 
         })
         .on("unlink", function (path) {
-          var index = path.indexOf("/app");
-          var filePath = path.substr(index);
-          var devPath = filePath.replace("/app", "/development");
-          var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
-          console.log("File has been deleted " + filePath);
-          clean("." + devPath);
+          var devFile = path.replace("app", config.environment);
+          deleteFiles(devFile);
         });
 });
 
@@ -261,14 +250,6 @@ function startBrowserSync() {
       open: false,
       browser: "google chrome"
   };
-
-  if (browserSync.active) {
-    return;
-  }
-
-  gulp.start(["less-watcher", "ts-watcher"], function () {
-    browserSync.reload();
-  });
 
   browserSync(options);
 }
@@ -392,7 +373,7 @@ function useRefBuild () {
       .pipe(gulp.dest("./build"))
       .on("end", function () {
           runSequence("minify-js", "minify-css", function () {
-            clean([config.build + "main.css", config.build + "build.js", config.build + "templates.js"]);
+            deleteFiles([config.build + "main.css", config.build + "build.js", config.build + "templates.js"]);
             setTimeout(rename, 1000);
           });
       });
@@ -408,13 +389,13 @@ function rename() {
       .pipe(lazy.rename("./build/app/build.js"))
       .pipe(gulp.dest(""))
       .on("end", function () {
-        clean(config.build + "build.optimized.min.js");
+        deleteFiles(config.build + "build.optimized.min.js");
       });
   gulp.src(config.build + "main.optimized.min.css")
       .pipe(lazy.rename("./build/app/main.css"))
       .pipe(gulp.dest(""))
       .on("end", function () {
-        clean(config.build + "main.optimized.min.css");
+        deleteFiles(config.build + "main.optimized.min.css");
       });
 }
 
