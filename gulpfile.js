@@ -11,6 +11,7 @@
   var lazy = require("gulp-load-plugins")({lazy: true});
   var runSequence = require("run-sequence"); /* Exceptionally used to run tasks in a sequence - not in parallel */
   var wiredep = require("wiredep");
+  var fse = require("fs-extra");
 
 
 /*
@@ -214,6 +215,24 @@ gulp.task("html-watcher", function () {
 });
 
 
+function copyFiles (file, dest) {
+  fse.copy(file, dest, function(err){
+    console.log(file + " copied to " + dest);
+  });
+};
+
+function deleteFiles(path){
+  fse.remove(path, function(err){
+    console.log("File has been deleted: " + path);
+  });
+};
+
+
+gulp.task("clean", function(){
+  deleteFiles(config.environment);
+})
+
+
 /*
 * * * Browser Sync Starter
 */
@@ -260,7 +279,8 @@ function startBrowserSync() {
 * * * Fire the main task to create the "development" environment.
 */
 gulp.task("start", function () {
-  runSequence("js-injector",
+  runSequence("clean",
+              "js-injector",
               "css-injector",
               "bower-injector",
               "copy-html",
@@ -399,19 +419,6 @@ function rename() {
         clean(config.build + "main.optimized.min.css");
       });
 }
-
-/*
-* * *
-*/
-function clean (path) {
-    gulp.src(path, {read: false})
-        .pipe(lazy.clean()).on("end", function () {
-          console.log("Done Cleaning...");
-        });
-}
-
-
-
 
 /*
 * * * Fire the main tasks to prepare the "build" environment. Optimize All. For publishing app.js lib.js app.css lib.css
