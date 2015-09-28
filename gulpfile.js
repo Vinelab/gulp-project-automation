@@ -244,7 +244,7 @@ function startBrowserSync() {
         baseDir: "./"
       },
       port: 9090,
-      files: ["!" + config.lessPath, config.appPath + "/**/*.*"],
+      files: ["!" + config.lessPath, config.environment + "/**/*.*"],
       ghostMode: {
         clicks: true,
         location: true,
