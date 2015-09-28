@@ -234,6 +234,11 @@ gulp.task("browser-sync", startBrowserSync);
 * * * Browser Sync configuration. Synchronize code across browsers. Watch for changes and reload the browsers.
 */
 function startBrowserSync() {
+
+  if (browserSync.active) {
+    return;
+  }
+
   var options = {
       server: {
         baseDir: "./"
@@ -251,7 +256,9 @@ function startBrowserSync() {
       logLevel: "debug",
       logPrefix: "gulp-patterns",
       notify: true,
-      reloadDelay: 0,
+      reloadDelay: 50,
+      online: false,
+      open: false,
       browser: "google chrome"
   };
 
