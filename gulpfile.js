@@ -183,25 +183,16 @@ gulp.task("less-watcher", function () {
 * * *
 */
 gulp.task("html-watcher", function () {
-    lazy.watch(["./app/**/", "!./app/*.ts", "!./app/**/*.ts", "!./app/**/**/**/*.css", "!./app/**/**/**/*.less", "!./app/_public/img/*.*", "!./app/_public/styles/fonts/*.*"])
+    lazy.watch(config.htmlPath)
         .on("add", function (path) {
-          var index = path.indexOf("/app");
-          var filePath = path.substr(index);
-          var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
-          console.log("New file has been added " + filePath);
-          copyHtml("." + filePath, devFile);
+          console.log('html added');
+          var devFile = path.replace("app", config.environment);
+          copyFiles(path, devFile);
         })
         .on("change", function (path) {
-          var index = path.indexOf("/app");
-          var filePath = path.substr(index );
-          var devPath = filePath.replace("/app", "/development");
-          var devFile = "./development" + filePath.substr(0, filePath.lastIndexOf("/"));
-          console.log("File has been changed " + filePath);
-          console.log("Should clean " + devPath);
-          clean("." + devPath);
-          setTimeout(function () {
-            copyHtml("." + filePath, devFile);
-          }, 1000);
+
+          var devFile = path.replace("app", config.environment);
+          copyFiles(path, devFile);
 
         })
         .on("unlink", function (path) {
