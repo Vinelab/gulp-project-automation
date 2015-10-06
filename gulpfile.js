@@ -31,7 +31,8 @@ gulp.task("app-config",function(){
   gulp.src('')
       .pipe(lazy.ngConstant({
         name: config.appName,
-        constants: config.inAppConfig
+        constants: config.inAppConfig,
+        deps: false
       }))
       .pipe(lazy.rename('app.config.js'))
       .pipe(gulp.dest(config.environment));
