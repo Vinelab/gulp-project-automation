@@ -17,6 +17,7 @@
   "devDependencies": {
     "browser-sync": "^2.8.2",
     "browserify": "^11.0.1",
+    "connect-modrewrite": "^0.8.2",
     "fs-extra": "^0.24.0",
     "gulp": "~3.9.0",
     "gulp-angular-templatecache": "~1.7.0",

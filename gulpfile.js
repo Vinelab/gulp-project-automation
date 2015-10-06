@@ -12,6 +12,7 @@
   var runSequence = require("run-sequence"); /* Exceptionally used to run tasks in a sequence - not in parallel */
   var wiredep = require("wiredep");
   var fse = require("fs-extra");
+  var modRewrite = require('connect-modrewrite');
 
 
 /*
@@ -230,8 +231,14 @@ function startBrowserSync() {
   }
 
   var options = {
+      startPath: '/index.html',
       server: {
-        baseDir: "./"
+        baseDir: './',
+        middleware: [
+          modRewrite([
+            '!\\.\\w+$ /index.html [L]'
+          ])
+        ]
       },
       port: 9090,
       files: ["!" + config.lessPath, config.environment + "/**/*.*"],
