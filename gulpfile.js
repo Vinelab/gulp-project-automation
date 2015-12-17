@@ -36,7 +36,7 @@ gulp.task("app-config",function(){
         deps: false
       }))
       .pipe(lazy.rename('app.config.js'))
-      .pipe(gulp.dest(config.environment));
+      .pipe(gulp.dest(config.localBuild));
 });
 
 /*
@@ -66,7 +66,7 @@ gulp.task("ts-compiler", function () {
                 // Specify ECMAScript target version: 'ES3' (default), or 'ES5'
                 target : "ES5"
               }))
-              .pipe(gulp.dest(config.environment));
+              .pipe(gulp.dest(config.localBuild));
 });
 gulp.task("Test-ts-compiler", ["test-ts-compiler"]);
 
@@ -88,7 +88,7 @@ gulp.task("less-css", function () {
     return gulp.src(["./app/_public/styles/less/variables.less", config.lessPath])
                .pipe(lazy.concat("main.less"))
                .pipe(lazy.less())
-               .pipe(gulp.dest(config.environment + "/_public/styles/"));
+               .pipe(gulp.dest(config.localBuild + "/_public/styles/"));
 });
 gulp.task("Test-less-css", ["test-less-css"]);
 
@@ -97,12 +97,12 @@ gulp.task("Test-less-css", ["test-less-css"]);
 * * * Add browser prefixes to make the Css rules compatible across browsers in the main.css file
 */
 gulp.task("auto-prefixer", ['less-css'], function () {
-    return gulp.src(config.environment + "/_public/styles/main.css")
+    return gulp.src(config.localBuild + "/_public/styles/main.css")
                .pipe(lazy.autoprefixer({
-                  browsers: ["> 0%"],
+                  browsers: ["last 2 versions"],
                   cascade: true
                }))
-               .pipe(gulp.dest(config.environment + "/_public/styles/"));
+               .pipe(gulp.dest(config.localBuild + "/_public/styles/"));
 });
 gulp.task("Test-auto-prefixer", ["test-auto-prefixer"]);
 
@@ -112,7 +112,7 @@ gulp.task("Test-auto-prefixer", ["test-auto-prefixer"]);
 */
 gulp.task("css-injector", ['auto-prefixer'], function () {
     return gulp.src(config.index)
-               .pipe(lazy.inject(gulp.src(config.environment + "/_public/styles/main.css", {read: false})))
+               .pipe(lazy.inject(gulp.src(config.localBuild + "/_public/styles/main.css", {read: false})))
                .pipe(gulp.dest(""));
 });
 gulp.task("Test-css-injector", ["test-css-injector"])
@@ -130,11 +130,21 @@ gulp.task("Test-bower-injector", ["test-bower-injector"]);
 
 
 /*
+* * * It injects arabic locale 
+*/
+gulp.task('arabic-locale-injector', function(){
+    return gulp.src(config.index)
+               .pipe(lazy.injectString.after('<script src="bower_components/moment/moment.js"></script>', '\n\t<script src="bower_components/moment/locale/ar-sa.js"></script>\n'))
+               .pipe(gulp.dest(""));
+});
+
+
+/*
 * * * Move all HTML files to "development" destination
 */
 gulp.task("copy-html", function () {
     return gulp.src(config.htmlPath)
-               .pipe(gulp.dest(config.environment));
+               .pipe(gulp.dest(config.localBuild));
 });
 
 
@@ -181,21 +191,26 @@ gulp.task("html-watcher", function () {
     lazy.watch(config.htmlPath)
         .on("add", function (path) {
           console.log('html added');
-          var devFile = path.replace("app", config.environment);
+          var devFile = path.replace("app", config.localBuild);
           copyFiles(path, devFile);
         })
         .on("change", function (path) {
 
-          var devFile = path.replace("app", config.environment);
+          var devFile = path.replace("app", config.localBuild);
           copyFiles(path, devFile);
 
         })
         .on("unlink", function (path) {
-          var devFile = path.replace("app", config.environment);
+          var devFile = path.replace("app", config.localBuild);
           deleteFiles(devFile);
         });
 });
 
+/****** temp images ****/
+
+gulp.task("copy-images", function(){
+  copyFiles('./app/_public/images', config.localBuild + "/_public/images");
+});
 
 function copyFiles (file, dest) {
   fse.copy(file, dest, function(err){
@@ -204,14 +219,14 @@ function copyFiles (file, dest) {
 };
 
 function deleteFiles(path){
-  fse.remove(path, function(err){
+  fse.remove(""+ path, function(err){
     console.log("File has been deleted: " + path);
   });
 };
 
 
 gulp.task("clean", function(){
-  deleteFiles(config.environment);
+  deleteFiles(config.localBuild);
 })
 
 
@@ -241,7 +256,7 @@ function startBrowserSync() {
         ]
       },
       port: 9090,
-      files: ["!" + config.lessPath, config.environment + "/**/*.*"],
+      files: ["!" + config.lessPath, config.localBuild + "/**/*.*"],
       ghostMode: {
         clicks: true,
         location: true,
@@ -268,8 +283,10 @@ function startBrowserSync() {
 gulp.task("start", function () {
   runSequence("clean",
               "js-injector",
+              "copy-images",
               "css-injector",
               "bower-injector",
+              "arabic-locale-injector",
               "copy-html",
               "less-watcher",
               "ts-watcher",
@@ -287,7 +304,7 @@ gulp.task("start", function () {
 gulp.task("minify-html", function () {
     return gulp.src(config.htmlPath)
                .pipe(lazy.minifyHtml({conditionals: true, spare:true}))
-               .pipe(gulp.dest(config.build));
+               .pipe(gulp.dest(config.serverBuild));
 });
 gulp.task("Test-minify-html", ["test-minify-html"]);
 
@@ -297,9 +314,9 @@ gulp.task("Test-minify-html", ["test-minify-html"]);
 * * * Compressing Images
 */
 gulp.task("images", function () {
-    return gulp.src(config.imagesPath)
+    return gulp.src(config.imagesPath) 
                .pipe(lazy.imagemin({optimizationLevel: 5}))
-               .pipe(gulp.dest(config.build + "_public/img"));
+               .pipe(gulp.dest(config.serverBuild + "_public/images"));
 });
 gulp.task("Test-images", ["test-images"]);
 
@@ -311,7 +328,7 @@ gulp.task("Test-images", ["test-images"]);
 */
 gulp.task("copy-fonts", function () {
     return gulp.src(config.fontsPath)
-               .pipe(gulp.dest(config.build + "_public/styles/fonts"))
+               .pipe(gulp.dest(config.serverBuild + "_public/styles/fonts"))
 });
 
 
@@ -322,7 +339,7 @@ gulp.task("template-cache", function () {
     return gulp.src(config.htmlPath)
                .pipe(lazy.minifyHtml({empty: true}))
                .pipe(lazy.angularTemplatecache())
-               .pipe(gulp.dest(config.build));
+               .pipe(gulp.dest(config.serverBuild));
 });
 gulp.task("Test-template-cache", ["test-template-cache"]);
 
@@ -332,10 +349,10 @@ gulp.task("Test-template-cache", ["test-template-cache"]);
 * * * Minify Css
 */
 gulp.task("minify-css", function () {
-    return gulp.src(config.build + "main.css")
+    return gulp.src(config.serverBuild + "main.css")
                .pipe(lazy.minifyCss({keepBreaks: false}))
-               .pipe(lazy.rename({suffix: '.optimized.min'}))
-               .pipe(gulp.dest(config.build));
+              // .pipe(lazy.rename({suffix: '.min'}))
+               .pipe(gulp.dest(config.serverBuild));
 });
 gulp.task("Test-minify-css", ["test-minify-css"]);
 
@@ -344,12 +361,12 @@ gulp.task("Test-minify-css", ["test-minify-css"]);
 /*
 * * * Minify JS
 */
-gulp.task("minify-js", function () {
-    return gulp.src(config.build + "build.js")
+gulp.task("minify-js", ['dependency-fixer'], function () {
+    return gulp.src(config.serverBuild + "app.js")
                .pipe(lazy.stripDebug())
                .pipe(lazy.uglify())
-               .pipe(lazy.rename({suffix: '.optimized.min'}))
-               .pipe(gulp.dest(config.build));
+              // .pipe(lazy.rename({suffix: '.min'}))
+               .pipe(gulp.dest(config.serverBuild));
 });
 gulp.task("Test-minify-js", ["test-minify-js"]);
 
@@ -361,7 +378,7 @@ gulp.task("Test-minify-js", ["test-minify-js"]);
 gulp.task("dependency-fixer", function () {
   return gulp.src(config.jsPath)
              .pipe(lazy.ngAnnotate())
-             .pipe(gulp.dest(config.environment));
+             .pipe(gulp.dest(config.localBuild));
 });
 gulp.task("Test-dependency-fixer", ["test-dependency-fixer"]);
 
@@ -374,45 +391,58 @@ gulp.task("Test-dependency-fixer", ["test-dependency-fixer"]);
 function useRefBuild () {
   var assets = lazy.useref.assets();
   gulp.src(config.index)
-      .pipe(lazy.inject(gulp.src(config.build + "templates.js", {read: false}), {starttag: "<!-- inject:templates:js -->"}))
+      .pipe(lazy.inject(gulp.src(config.serverBuild + "templates.js", {read: false}), {starttag: "<!-- inject:templates:js -->"}))
       .pipe(assets)
       .pipe(assets.restore())
       .pipe(lazy.useref())
-      .pipe(gulp.dest("./build"))
-      .on("end", function () {
+      .pipe(gulp.dest("./public"));
+      /*.on("end", function () {
           runSequence("minify-js", "minify-css", function () {
-            deleteFiles([config.build + "main.css", config.build + "build.js", config.build + "templates.js"]);
-            setTimeout(rename, 1000);
+            //deleteFiles(config.build + "main.css");
+            //deleteFiles(config.build + "app.js");
+            //deleteFiles(config.build + "templates.js");
+            // setTimeout(rename, 1000);
           });
-      });
+      });*/
 }
 
+/*gulp.task("Copy Angular Tools", function () {
+    gulp.src("/tools")
+        .pipe(gulp.dest("./public/development"))
 
-/*
-* * * Rename the newly optimized files back to build.js and main.css respectively, then delete the old optimized files,
-* * * because he useRef in the index.html is always pointing at two files named: build.js and main.css.
-*/
-function rename() {
-  gulp.src(config.build + "build.optimized.min.js")
-      .pipe(lazy.rename("./build/app/build.js"))
-      .pipe(gulp.dest(""))
-      .on("end", function () {
-        deleteFiles(config.build + "build.optimized.min.js");
-      });
-  gulp.src(config.build + "main.optimized.min.css")
-      .pipe(lazy.rename("./build/app/main.css"))
-      .pipe(gulp.dest(""))
-      .on("end", function () {
-        deleteFiles(config.build + "main.optimized.min.css");
-      });
-}
+});*/
 
 /*
 * * * Fire the main tasks to prepare the "build" environment. Optimize All. For publishing app.js lib.js app.css lib.css
 */
-gulp.task("env-build", ["minify-html",
-                        "images",
-                        "copy-fonts",
-                        "template-cache",
-                        "dependency-fixer"], useRefBuild);
+// gulp.task("build", [    "clean",
+//                         "js-injector",
+//                         "copy-images",
+//                         "css-injector",
+//                         "bower-injector",
+//                         "copy-html",
+
+//                         "minify-html",
+//                         "images",
+//                         "copy-fonts"
+//                         //"template-cache",
+
+//                         ], useRefBuild);
+
+
+gulp.task("build", function(){
+  runSequence(
+    "clean",
+    ["js-injector", "copy-images", "css-injector", "bower-injector", "arabic-locale-injector"],
+    "copy-html",
+    "minify-html",
+    "images",
+    "copy-fonts",
+    useRefBuild
+    );
+});
+
 }());
+
+
+
